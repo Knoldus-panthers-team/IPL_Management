@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <form method="post" action="#" th:action="@{/add}" th:object="${player}">
+        <!-- 2 column grid layout with text inputs for the first and last names -->
+        <div class="row mb-3">
+            <div class="col">
+                <div class="form-outline">
+                    <label class="form-label" for="form3Example1">First name</label>
+                    <input type="text" th:field="*{name}" id="form3Example1" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="role" class="form-label">Role</label>
+            <input type="text" class="form-control" th:field="*{role}" id="role" aria-describedby="role">
+        </div>
+        <div class="mb-3">
+            <label for="country" class="form-label">Country</label>
+            <input type="text" class="form-control" th:field="*{country}" id="country" aria-describedby="countryHelp">
+        </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+</body>
+</html>
