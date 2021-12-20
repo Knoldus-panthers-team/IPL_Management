@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+    <title>Schedule Match</title>
+    <style>
+        .error{
+            color:red;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <form method="post" action="#" th:action="@{/matches/save}" th:object="${match}">
+
+        <!--                        <div class="mb-3">-->
+        <!--                            <label for="role" class="form-label">Winner</label>-->
+        <!--                            <input type="text" class="form-control" th:field="*{matchWinner}" id="matchWinner" aria-describedby="role">-->
+        <!--                        </div>-->
+        <!--                        <div class="mb-3">-->
+        <!--                            <label for="country" class="form-label">Result</label>-->
+        <!--                            <input type="text" class="form-control" th:field="*{result}" id="result" aria-describedby="countryHelp">-->
+        <!--                        </div>-->
+        <!--                        <div class="mb-3">-->
+        <!--                            <label for="country" class="form-label">Toss Winner</label>-->
+        <!--                            <input type="text" class="form-control" th:field="*{tossWinner}" id="tossWinner" aria-describedby="countryHelp">-->
+        <!--                        </div>-->
+        <!-- 2 column grid layout with text inputs for the first and last names -->
+        <div class="mb-3">
+            <label class="form-label" for="date_picker">Date</label>
+            <input class="form-control" type="datetime-local" id="date_picker" name="date_picker"
+                   min="2021-12-06T00:00" max="2022-06-14T024:00" th:field="*{matchDate}"/>
+            <p th:if="${#fields.hasErrors('matchDate')}" class="text-danger ml-1" th:errors="*{matchDate}">Date Error</p>
+
+        </div>
+        <div class="mb-3">
+            <label for="country" class="form-label">Venue</label>
+            <select th:field="*{venue}" class="custom-select" id="venue_select" onchange="venueOptions(this)">
+                <option value="0" selected >Choose...</option>
+                <div th:each="venue:${venues}">
+                    <option th:value="${venue.id}" th:text="${venue.name}"></option>
+                </div>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="role" class="form-label">Team-1</label>
+            <select th:field="*{team1}" class="custom-select" id="team1_select" onchange="team1Options()">
+                <option value="0" selected >Choose...</option>
+                <div th:each="team:${teams}">
+                    <option th:value="${team.id}" th:text="${team.name}"></option>
+                </div>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="role" class="form-label">Team-2</label>
+            <select th:field="*{team2}" class="custom-select" id="team2_select" onchange="team2Options(this)">
+                <option value="0" selected >Choose...</option>
+                <div th:each="team:${teams}">
+                    <option th:value="${team.id}" th:text="${team.name}"></option>
+                </div>
+            </select>
+        </div>
+        <button type="submit" id="btn" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+
+	jQuery(document).ready(function($) {
+		$("#search-form").submit(function(event) {
+
+			// Prevent the form from submitting via the browser.
+			event.preventDefault();
+			searchViaAjax();
+
+		});
+	});
+
+	function searchAjax() {
+		var data = {}
+		data["query"] = $("#query").val();
+
+		$.ajax({
+			type : "POST",
+			contentType : "application/json",
+			url : "${home}search/api/getSearchResult",
+			data : JSON.stringify(data),
+			dataType : 'json',
+			timeout : 100000,
+			success : function(data) {
+				console.log("SUCCESS: ", data);
+				display(data);
+			},
+			error : function(e) {
+				console.log("ERROR: ", e);
+				display(e);
+			},
+			done : function(e) {
+				console.log("DONE");
+			}
+		});
+	}
+</script>
+</body>
+</html>

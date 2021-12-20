@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <title>Update Result</title>
+</head>
+<body>
+
+<div>
+    <nav class="navbar navbar-dark d-flex justify-content-center" style="background-color:#223577">
+        <div class="container"><div class="mt-3 row"><h4 class="text-light">Indian Premier League</h4></p></div></div>
+        <ul class="nav nav-tabs d-flex justify-content-center" id="myTab" role="tablist">
+        </ul>
+    </nav>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6 mt-4">
+            <div>
+                <h1 class="d-flex justify-content-center fw-bold">Update Result</h1>
+                <form method="post" action="#" th:action="@{/result/update/{id}(id=${match.id})}" th:object="${match}">
+                    <!-- 2 column grid layout with text inputs for the first and last names -->
+                    <div class="row mb-3" hidden>
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="form-label" for="form3Example1">Date</label>
+                                <input type="hidden" th:field="*{matchDate}" id="form3Example1" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="team1Score" class="form-label">[[${team1}]] Score</label>
+                                <input type="text" class="form-control" th:field="*{team1Score}" onchange="validateTeam1Score()" id="team1Score" aria-describedby="role">
+                                <span id="spnError" style="color: Red; display: none">*Enter valid score.</span>
+                                <p class="text text-danger" id="player_namemsg"></p>
+                            </div>
+                            <div class="col-6">
+                                <label  class="form-label">[[${team1}]] Wickets</label>
+                                <select th:field="*{team1Wickets}" class="custom-select">
+                                    <option th:value="0" th:text="0"></option>
+                                    <option th:value="1" th:text="1"></option>
+                                    <option th:value="2" th:text="2"></option>
+                                    <option th:value="3" th:text="3"></option>
+                                    <option th:value="4" th:text="4"></option>
+                                    <option th:value="5" th:text="5"></option>
+                                    <option th:value="6" th:text="6"></option>
+                                    <option th:value="7" th:text="7"></option>
+                                    <option th:value="8" th:text="8"></option>
+                                    <option th:value="9" th:text="9"></option>
+                                    <option th:value="10" th:text="10"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="team2Score" class="form-label">[[${team2}]] Score</label>
+                                <input type="text" class="form-control" th:field="*{team2Score}" onchange="validateTeam2Score()" id="team2Score" aria-describedby="role">
+                                <span id="spnError2" style="color: Red; display: none">*Enter valid score.</span>
+                                <p class="text text-danger" id="player_namemsg2"></p>
+                            </div>
+                            <div class="col-6">
+                                <label  class="form-label">[[${team2}]] Wickets</label>
+                                <select th:field="*{team2Wickets}" class="custom-select">
+                                    <option th:value="0" th:text="0"></option>
+                                    <option th:value="1" th:text="1"></option>
+                                    <option th:value="2" th:text="2"></option>
+                                    <option th:value="3" th:text="3"></option>
+                                    <option th:value="4" th:text="4"></option>
+                                    <option th:value="5" th:text="5"></option>
+                                    <option th:value="6" th:text="6"></option>
+                                    <option th:value="7" th:text="7"></option>
+                                    <option th:value="8" th:text="8"></option>
+                                    <option th:value="9" th:text="9"></option>
+                                    <option th:value="10" th:text="10"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="form-label" for="team1Over">[[${team1}]] Overs</label>
+                                <input type="text" th:field="*{team1Over}" id="team1Over" onchange="ValidateOver1()" class="form-control" required />
+                                <span id="spnError3" style="color: Red; display: none">*Enter valid overs.</span>
+                                <p class="text text-danger" id="player_namemsg3"></p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="form-label" for="team2Over">[[${team2}]] Overs</label>
+                                <input type="text" th:field="*{team2Over}" id="team2Over" onchange="ValidateOver2()" class="form-control" required />
+                                <span id="spnError4" style="color: Red; display: none">*Enter valid overs.</span>
+                                <p class="text text-danger" id="player_namemsg4"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3" hidden>
+                        <label for="role" class="form-label">Venue</label>
+                        <select th:field="*{venue}" class="custom-select" >
+                            <div th:each="venue:${venues}">
+                                <option th:value="${venue.id}" th:text="${venue.name}" class="form-control"></option>
+                            </div>
+                        </select>
+                    </div>
+
+                    <div class="mb-3" hidden>
+                        <label for="" class="form-label">Team-1</label>
+                        <select th:field="*{team1}" class="custom-select">
+                            <div th:each="team:${teams}">
+                                <option th:value="${team.id}" th:text="${team.name}"></option>
+                            </div>
+                        </select>
+                    </div>
+
+                    <div class="mb-3" hidden>
+                        <label for="" class="form-label">Team-2</label>
+                        <select th:field="*{team2}" class="custom-select">
+                            <div th:each="team:${teams}">
+                                <option th:value="${team.id}" th:text="${team.name}"></option>
+                            </div>
+                        </select>
+                    </div>
+                    <button type="submit" id="btnSubmit" class="btn btn-primary" >Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script></body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script>
+<!----------------------------------------------------Add Score------------------------------------------------------>
+     function validateTeam1Score() {
+        var isValid = false;
+        var regex = /^[0-9]*$/;
+        isValid = regex.test(document.getElementById("team1Score").value);
+        document.getElementById("spnError").style.display = !isValid ? "block" : "none";
+        return isValid;
+    }
+     function validateTeam2Score() {
+        var isValid = false;
+        var regex = /^[0-9-+()/]*$/;
+        isValid = regex.test(document.getElementById("team2Score").value);
+        document.getElementById("spnError2").style.display = !isValid ? "block" : "none";
+        return isValid;
+    }
+
+
+<!--    ------------------------------Validate overs----------------------------->
+
+     function ValidateOver1() {
+        var isValid = false;
+        var regex = /^[+-]?\d+(\.\d+)?$/;
+        isValid = regex.test(document.getElementById("team1Over").value);
+        document.getElementById("spnError3").style.display = !isValid ? "block" : "none";
+         over = $("#team1Over").val();
+         if(over > 20){
+            $("#player_namemsg3").html("Overs can not be more than 20");
+            $("#team1Over").css('border-color', 'red');
+            document.getElementById("btnSubmit").disabled = true;
+         }else{
+             document.getElementById("btnSubmit").disabled = false;
+             $("#player_namemsg3").html("");
+            $("#team1Over").css('border-color', '');
+         }
+        return isValid;
+    }
+
+       function ValidateOver2() {
+        var isValid = false;
+        var regex = /^[+-]?\d+(\.\d+)?$/;
+        isValid = regex.test(document.getElementById("team2Over").value);
+        document.getElementById("spnError4").style.display = !isValid ? "block" : "none";
+         over = $("#team2Over").val();
+         if(over > 20){
+            document.getElementById("btnSubmit").disabled = true;
+            $("#player_namemsg4").html("Overs can not be more than 20");
+            $("#team2Over").css('border-color', 'red');
+         }else{
+            document.getElementById("btnSubmit").disabled = false;
+            $("#player_namemsg4").html("");
+            $("#team2Over").css('border-color', '');
+         }
+        return isValid;
+    }
+
+</script>
+</html>

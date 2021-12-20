@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Matches</title>
+    <style>
+    body{
+    background-color:#008000;
+    }
+<!--        To auto increment id column in table-->
+        table {
+                  counter-reset: rowNumber;
+                }
+
+                table tr {
+                  counter-increment: rowNumber;
+                }
+
+                table tr td:first-child::before {
+                  content: counter(rowNumber);
+                  min-width: 1em;
+                  margin-right: 0.5em;
+                }
+                a {
+                      text-decoration: none !important;
+                    }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <nav class="navbar navbar-dark bg-primary">
+
+    </nav>
+    <!--  Team Add Modal -->
+    <div class="modal fade" id="addMatch" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">Schedule Match</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" th:action="@{/matches/save}" th:object="${match}">
+
+                        <div class="mb-3">
+                            <label for="winner" class="form-label">Match Winner</label>
+                            <input type="text" required class="form-control" th:field="*{matchWinner}" id="winner" aria-describedby="role">
+                        </div>
+                        <div class="mb-3">
+                            <label for="venue" class="form-label">Venue</label>
+                            <input type="text" required class="form-control" th:field="*{venue}" id="venue" aria-describedby="role">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="result" class="form-label">Result</label>
+                            <input type="text" required class="form-control" th:field="*{result}" id="result" aria-describedby="role">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="result" class="form-label">Toss Winner</label>
+                            <input type="text" required class="form-control" th:field="*{tossWinner}" id="toss_winner" aria-describedby="role">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Date</label>
+                            <input type="text" required class="form-control" th:field="*{matchDate}" id="date" aria-describedby="role">
+                        </div>
+
+                        <!-- 2 column grid layout with text inputs for the first and last names -->
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="form-label" for="team1">Team-1</label>
+                                    <input type="text" th:field="*{team}" id="team1" class="form-control" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="team2" class="form-label">Team-2</label>
+                            <input type="text" required class="form-control" th:field="*{team2}" id="team2" aria-describedby="role">
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <!--                            <button type="button" class="btn btn-primary">Save changes</button>-->
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-2 mb-2 d-flex justify-content-center">
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMatch">
+            Add Player
+        </button>
+    </div>
+    <table class="table table-dark table-hover">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Team1</th>
+            <th scope="col">vs</th>
+            <th scope="col">Team2</th>
+            <th scope="col">Venue</th>
+            <th scope="col">Date</th>
+            <th scope="col">Result</th>
+            <th scope="col">Winner</th>
+            <th scope="col">Action</th>
+            <th colspan="2">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each ="matchObj:${matchList}">
+            <td></td>
+            <td><a th:href="@{/teams/players/{id}(id=${matchObj.team.id})}">[[${matchObj.team2.name}]]</a></td>
+            <td>vs</td>
+            <td th:text ="${matchObj.team2.id}">
+            <td th:text ="${matchObj.venue}"></td>
+            <td th:text ="${matchObj.matchDate}"></td>
+            <td th:text ="${matchObj.tossWinner}"></td>
+            <td th:text ="${matchObj.result}"></td>
+            <td th:text ="${matchObj.matchWinner}"></td>
+
+            <td><a th:href="@{/matches/edit/{id}(id=${matchObj.id})}">Edit</a></td>
+            <td><a th:href="@{/matches/delete/{id}(id=${matchObj.id})}">Delete</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
