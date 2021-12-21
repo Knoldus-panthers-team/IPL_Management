@@ -9,23 +9,8 @@
     <link rel="stylesheet" href="/css/indexStyle.css">
 
     <style>
-        nav ul {
-        list-style-type: none;
-        display: flex;
-        justify-content: space-between;
-        width: 70%; }
-        body {
-            background-image: url("/images/ground6.jpg");
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-position: center;
-        }
-        table {
-            background-color: rgba(0, 0, 0, 0.5);
-            opacity: 0.9;
-        }
 
-<!--        **********************************************************************-->
+<!-- **********************************************************************-->
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Dosis:wght@800&display=swap');
 
@@ -276,22 +261,6 @@
 
 .question-btn:hover {
   background: #bacee4;
-}
-
-.error-timer {
-  background: #e5a4b4;
-}
-
-.success-timer {
-  background: #6edaa4;
-}
-
-.warning-timer {
-  background: #fcecae;
-}
-
-.info-timer {
-  background: #c3e6fb;
 }
 
 .info-bg {
@@ -668,18 +637,7 @@
         </div>
     </div>
 <!--    <div th:if="${message}" th:text="${message}" th:id="${alertId}" th:class="${'alert ' + alertClass}"/>-->
-
-    <div hidden th:if="${alertType}" th:text="${message}" id="success" th:class="${messageType}">
-<!--        <div class="alert alert-success">-->
-<!--            <strong>Success!</strong> [[${message}]].-->
-<!--        </div>-->
-    </div>
-<!--            <div th:if="${alertType}" th:text="${message}" id="failed" th:class="${'alert alert-danger' + messageType}">-->
-<!--                <strong>Failure!</strong> Operation failed. Please try again-->
-<!--            </div>-->
-<!--    <div th:if="${message}" th:id="${alertId}" class="alert alert-success">-->
-<!--        <strong>Success!</strong>.-->
-<!--    </div>-->
+    <div hidden th:if="${alertType}" th:text="${message}" id="success" th:class="${messageType}"></div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

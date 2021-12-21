@@ -6,7 +6,7 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <title>Reschedule Match</title>
 </head>
-<body>
+<body th:object="${match}">
 <div>
     <nav class="navbar navbar-dark d-flex justify-content-center" style="background-color:#223577">
         <div class="container"><div class="mt-3 row"><h4 class="text-light">Indian Premier League</h4></p></div></div>
@@ -20,19 +20,32 @@
     <div class="col-6 mt-4">
         <div>
             <h1 class="d-flex justify-content-center fw-bold">Reschedule Match</h1>
-            <form method="post" action="#" th:action="@{/matches/update/{id}(id=${match.id})}" th:object="${match}">
+            <form method="post" action="#" th:action="@{/matches/update/{id}(id=${match.id})}" >
                 <!-- 2 column grid layout with text inputs for the first and last names -->
+<!--                <div hidden th:if="${alertType}" th:text="${message}" id="success" th:class="${messageType}">-->
+<!--                           -->
+<!--                </div>-->
+                <div th:if="${alertType}" id="failed">
+                    <div class="alert alert-danger">
+                        <strong>Failed!</strong> [[${message}]].
+                    </div>
+                </div>
+<!--                <div th:if="${teamSame}" id="teamFailed">-->
+<!--                    <div class="alert alert-danger">-->
+<!--                        <strong>Failed!</strong> [[${message}]].-->
+<!--                    </div>-->
+<!--                </div>-->
+
                 <p class="text text-danger" id="matchMsg"></p>
                 <div class="mb-3">
                     <label class="form-label" for="date_picker">Date</label>
                     <input class="form-control" type="datetime-local" id="date_picker" name="meeting-time"
-                           min="2021-12-06T00:00" max="2022-06-14T024:00" th:field="*{matchDate}" onchange="checkVenueDate()"/>
+                           min="2021-12-06T00:00" max="2022-06-14T24:00" th:field="*{matchDate}"/>
                     <p th:if="${#fields.hasErrors('matchDate')}" class="text-danger ml-1" th:errors="*{matchDate}">Name Error</p>
                 </div>
                 <div class="mb-3">
                     <label for="venue_select" class="form-label">Venue</label>
-                    <select th:field="*{venue}" class="custom-select" id="venue_select" onchange="checkVenueDate()">
-                        <option value="0" selected >Choose...</option>
+                    <select th:field="*{venue}" class="custom-select" id="venue_select">
                         <div th:each="venue:${venues}">
                             <option th:value="${venue.id}" th:text="${venue.name}"></option>
                         </div>
@@ -43,7 +56,6 @@
                 <div class="mb-3">
                     <label for="team1_select" class="form-label">Team-1</label>
                     <select th:field="*{team1}" class="custom-select" id="team1_select" onchange="team1Options()">
-                        <option value="0" selected >Choose...</option>
                         <div th:each="team:${teams}">
                             <option th:value="${team.id}" th:text="${team.name}"></option>
                         </div>
@@ -54,7 +66,6 @@
                 <div class="mb-3">
                     <label for="team2_select" class="form-label">Team-2</label>
                     <select th:field="*{team2}" class="custom-select" id="team2_select" onchange="team2Options()">
-                        <option value="0" selected >Choose...</option>
                         <div th:each="team:${teams}">
                             <option th:value="${team.id}" th:text="${team.name}"></option>
                         </div>
@@ -73,120 +84,34 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.0/moment.min.js"></script>
-<script>
+<script th:inline="javascript">
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
     var dateControl = document.querySelector('input[type="datetime-local"]');
     var time = today.getHours()+':'+today.getMinutes();
-    console.log(moment(new Date()).format("YYYY-MM-DDThh:mm"));
     var CurrentDatetime = moment(new Date()).format("YYYY-MM-DDThh:mm");
     dateControl.min = CurrentDatetime;
-    console.log(dateControl.min);
-    dateControl.value = CurrentDatetime;
+    var data = /*[[${match.matchDate}]]*/;
+    var dbDate = data.split(" ");
+    var CurrentDatetime = moment(dbDate[0]+"T"+dbDate[1]).format("YYYY-MM-DDThh:mm");
+    dateControl.value = CurrentDatetime+":00";
 
     <!---------------------------------- DateTIme Validation and venue select same day ------------------------------------------------>
        function matchFormSubmit(){
-            if(checkVenueDate() ||  matchScheduleValidate())
+            if(team2Options() ||  matchScheduleValidate())
             {
                 $("#matchMsg").html("Please fill all the fields...");
                 document.getElementById("matchSubmit").disabled = true;
             }
         }
 
-    function checkVenueDate() {
-<!--        checkVenue();-->
-        var dateControl1 = document.querySelector('input[type="datetime-local"]').value;
-        var selectedDate = new Date(dateControl1);
-        var date1 = selectedDate.getFullYear()+','+(selectedDate.getMonth()+1)+','+selectedDate.getDate();
-        var venueSelected = $("#venue_select option:selected").html();
-        console.log("Present: "+isSlotBooked(venueSelected, date1));
-
-         if(venueId == 0){
-            var venueId = $("#venue_select option:selected").val();
-            console.log("inside venue check == 0");
-            $("#matchMsg").html("Please select the venue");
-            $("#venue_select").css('border-color', 'red');
-            document.getElementById("matchSubmit").disabled = true;
-<!--            return true;-->
-        }else {
-             $("#matchMsg").html("");
-             $("#venue_select").css('border-color', '');
-            document.getElementById("matchSubmit").disabled = false;
-<!--            return false;-->
-        }
-
-        if(isSlotBooked(venueSelected, date1)){
-            return true;
-        }
-       console.log("Runnnig------------- ");
-    }
-    function isSlotBooked(venueSelected, date1){
-        var n1 = document.getElementById("tableData").rows.length;
-        var i=0,j=0;
-         for(i=1; i<n1;i++){
-            var n2 = document.getElementById("tableData").rows[i].cells.length;
-            var x=document.getElementById("tableData").rows[i].cells.item(5).innerHTML;
-            var tableVenue =document.getElementById("tableData").rows[i].cells.item(4).innerHTML;
-            var datetime = x.split(" "); //-- 2021-12-13
-            var date = datetime[0].split("-");
-            var date2 = date[0]+","+date[1]+","+date[2];
-
-        console.log("DatePicker:  "+date1);
-        console.log("Hello");
-
-         if(date1 == "NaN,NaN,NaN"){
-          console.log("condistion trye ",venueSelected);
-             return true;
-         }
-
-        function diff_minutes(dt2, dt1)
-         {
-          var diff =(dt2.getTime() - dt1.getTime()) / 1000;
-          diff /= 60;
-          return Math.abs(Math.round(diff));
-         }
-        dt1 = new Date(date1);
-        dt2 = new Date(date2);
-        console.log("Tablevenue ",tableVenue);
-        console.log("Selected ",venueSelected);
-        var timeDiff = diff_minutes(dt1, dt2)/60
-        console.log("Hours: ",timeDiff);
-
-        if(timeDiff == 0 && venueSelected == tableVenue){
-            console.log(timeDiff ==0 && venueSelected == tableVenue);
-             $("#venue_select").css('border-color', 'red');
-             $("#date_picker").css('border-color', 'red');
-             $("#matchMsg").html("This slot is booked for other match. Please select another date");
-            document.getElementById("matchSubmit").disabled = true;
-            return true;
-            }else if(timeDiff !=0 || venueSelected != tableVenue){
-                console.log("false condition");
-                 $("#matchMsg").html("");
-                 $("#venue_select").css('border-color', '');
-                 $("#date_picker").css('border-color', '');
-                document.getElementById("matchSubmit").disabled = false;
-            }
-        }
-    }
-
     <!---------------------------------- Validation for Team selection in matches modal --------------------------------------------->
 
     function team2Options(){
         var team2Id = $("#team2_select option:selected").val();
         var team1Id = $("#team1_select option:selected").val();
-
-          if(team2Id==0){
-            $("#matchMsg").html("Please select team-2");
-                document.getElementById("matchSubmit").disabled = true;
-                $("#team2_select").css('border-color', 'red');
-                return true;
-            }else{
-                $("#matchMsg").html("");
-                document.getElementById("matchSubmit").disabled = false;
-                $("#team2_select").css('border-color', '');
-            }
 
          if(team1Id == team2Id){
               $("#matchMsg").html("Team cannot be same. Please select different team instead");
@@ -203,56 +128,11 @@
             }
     }
 
-     function team1Options(){
-        var team2Id = $("#team2_select option:selected").val();
-        var team1Id = $("#team1_select option:selected").val();
-      if(team1Id==0){
-            $("#matchMsg").html("Please select team-1");
-            document.getElementById("matchSubmit").disabled = true;
-            $("#team1_select").css('border-color', 'red');
-            return true;
-        }
-
-       if(team1Id == team2Id){
-              $("#matchMsg").html("Team cannot be same. Please select different team instead");
-              $("#team1_select").css('border-color', 'red');
-              $("#team2_select").css('border-color', 'red');
-              document.getElementById("matchSubmit").disabled = true;
-              return true;
-            }
-          else if (team1Id != team2Id){
-                $("#matchMsg").html("");
-                $("#team1_select").css('border-color', '');
-                $("#team2_select").css('border-color', '');
-                document.getElementById("matchSubmit").disabled = false;
-            }
-        }
-
-     function checkVenue(){
-        if(venueId == 0){
-            $("#matchMsg").html("Please select the venue");
-            $("#venue_select").css('border-color', 'red');
-            document.getElementById("matchSubmit").disabled = true;
-            return true;
-        }else {
-             $("#matchMsg").html("");
-             $("#venue_select").css('border-color', '');
-            document.getElementById("matchSubmit").disabled = false;
-        }
-     }
-
-
-    function matchScheduleValidate() {
-        var venueId = $("#venue_select option:selected").val();
+    function team1Options() {
         var team1Id = $("#team1_select option:selected").val();
         var team2Id = $("#team2_select option:selected").val();
 
-      if(team1Id==0 || team2Id==0){
-          $("#matchMsg").html("Please select all the fields..");
-          document.getElementById("matchSubmit").disabled = true;
-          return true;
-      }
-      else if(team1Id == team2Id){
+      if(team1Id == team2Id){
             $("#matchMsg").html("Team cannot be same. Please select different team instead");
             document.getElementById("matchSubmit").disabled = true;
             $("#team1_select").css('border-color', 'red');
@@ -265,15 +145,6 @@
             $("#team2_select").css('border-color', '');
             document.getElementById("matchSubmit").disabled = false;
       }
-        if(venueId == 0){
-            $("#matchMsg").html("Please select the venue");
-            $("#venue_select").css('border-color', 'red');
-            document.getElementById("matchSubmit").disabled = true;
-        }else {
-             $("#matchMsg").html("");
-             $("#venue_select").css('border-color', '');
-            document.getElementById("matchSubmit").disabled = false;
-        }
     }
 
 </script>

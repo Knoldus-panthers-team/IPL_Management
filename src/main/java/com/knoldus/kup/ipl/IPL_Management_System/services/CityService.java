@@ -13,6 +13,10 @@ public class CityService {
     @Autowired
     CityRepository cityRepository;
 
+    public CityService(CityRepository cityRepository) {
+        this.cityRepository = cityRepository;
+    }
+
     public List<City> getAllCities(){
         return (List<City>) cityRepository.findAll();
     }

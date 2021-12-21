@@ -2,9 +2,7 @@ package com.knoldus.kup.ipl.IPL_Management_System.controllers;
 
 import com.knoldus.kup.ipl.IPL_Management_System.models.*;
 import com.knoldus.kup.ipl.IPL_Management_System.repository.*;
-import com.knoldus.kup.ipl.IPL_Management_System.services.PointService;
-import com.knoldus.kup.ipl.IPL_Management_System.services.ResultService;
-import com.knoldus.kup.ipl.IPL_Management_System.services.UpdateResultService;
+import com.knoldus.kup.ipl.IPL_Management_System.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,13 +19,13 @@ import java.util.List;
 public class ResultController {
 
     @Autowired
-    MatchRepository matchRepository;
+    MatchService matchService;
 
     @Autowired
-    VenueRepository venueRepository;
+    VenueService venueService;
 
     @Autowired
-    TeamRepository teamRepository;
+    TeamService teamService;
 
     @Autowired
     ResultService resultService;
@@ -41,7 +39,7 @@ public class ResultController {
     @GetMapping("/addScore/{match_id}")
     public String showAddForm(@PathVariable ("match_id") long match_id, Model model) {
 
-        Match match = matchRepository.findById(match_id)
+        Match match = matchService.getMatchById(match_id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid match Id:" + match_id));
         System.out.println("result add method"+match.getTeam1().getName()+match.getTeam1Over().equals("Yet to be played"));
 
@@ -52,10 +50,10 @@ public class ResultController {
 
         model.addAttribute("match",match);
 
-        List<Team> teams = (List<Team>) teamRepository.findAll();
+        List<Team> teams = teamService.getAllTeams();
         model.addAttribute("teams",teams);
 
-        List<Venue> venues= (List<Venue>) venueRepository.findAll();
+        List<Venue> venues= venueService.getAllVenues();
         model.addAttribute("venues",venues);
 
 //        model.addAttribute("team1", match.getTeam1().getName());
@@ -67,16 +65,16 @@ public class ResultController {
     @GetMapping("/editScore/{match_id}")
     public String showUpdateForm(@PathVariable ("match_id") long match_id, Model model) {
 
-        Match match = matchRepository.findById(match_id)
+        Match match = matchService.getMatchById(match_id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid match Id:" + match_id));
         System.out.println("result edit method"+match.getTeam1().getName());
 
         model.addAttribute("match",match);
 
-        List<Team> teams = (List<Team>) teamRepository.findAll();
+        List<Team> teams = teamService.getAllTeams();
         model.addAttribute("teams",teams);
 
-        List<Venue> venues= (List<Venue>) venueRepository.findAll();
+        List<Venue> venues= venueService.getAllVenues();
         model.addAttribute("venues",venues);
         model.addAttribute("team1", match.getTeam1().getName());
         model.addAttribute("team2", match.getTeam2().getName());
@@ -88,7 +86,7 @@ public class ResultController {
     public String ScoreSave(@PathVariable("id") long id, Match match, Model model, RedirectAttributes redirectAttributes){
         System.out.println("add result method---------------------------------"+match.getTeam1Over());
         resultService.getResult(match);
-        pointService.updatePointTable(match);
+        pointService.addPointTable(match);
         redirectAttributes.addFlashAttribute("message", "Score added successfully");
         redirectAttributes.addFlashAttribute("messageType", "score");
         redirectAttributes.addFlashAttribute("alertType", "success");
@@ -98,7 +96,6 @@ public class ResultController {
     @PostMapping("/update/{id}")
     public String ScoreUpdate(@PathVariable("id") long id, Match match, Model model, RedirectAttributes redirectAttributes){
         System.out.println("result update method---------------------------------"+match.getTeam1Over());
-//        resultService.getResult(match);
         updateResultService.updatePointTable(match);
         redirectAttributes.addFlashAttribute("message", "Score updated successfully");
         redirectAttributes.addFlashAttribute("messageType", "score");

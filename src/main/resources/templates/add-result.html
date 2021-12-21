@@ -36,6 +36,7 @@
         <h1 class="d-flex justify-content-center text-white fw-bold">Add Result</h1>
         <form method="post" action="#" th:action="@{/result/add/{id}(id=${match.id})}" th:object="${match}">
           <!-- 2 column grid layout with text inputs for the first and last names -->
+          <p class="text text-danger" id="errorMessage"></p>
           <div class="row mb-2" hidden>
             <div class="col">
               <div class="form-outline">
@@ -125,7 +126,7 @@
                   <div class="col">
                     <div class="form-outline">
                       <label class="form-label font-weight-bold" for="team1Over">Overs</label>
-                      <input type="text" th:field="*{team1Over}" onchange="ValidateOver1()" id="team1Over" class="form-control" required />
+                      <input type="text" th:field="*{team1Over}" onchange="ValidateOver1()" id="team1Over" class="form-control"  />
                       <span id="spnError3" style="color: Red; display: none">*Enter valid overs.</span>
                       <p class="text text-danger" id="player_namemsg3"></p>
                     </div>
@@ -182,7 +183,7 @@
               <div class="col">
                 <div class="form-outline">
                   <label class="form-label font-weight-bold" for="team2Over">Overs</label>
-                  <input type="text" th:field="*{team2Over}" onchange="ValidateOver2()" id="team2Over" class="form-control" required />
+                  <input type="text" th:field="*{team2Over}" onchange="ValidateOver2()" id="team2Over" class="form-control"  />
                   <span id="spnError4" style="color: Red; display: none">*Enter valid overs.</span>
                   <p class="text text-danger" id="player_namemsg4"></p>
                 </div>
@@ -224,7 +225,7 @@
     </div>
   </div>
 </div>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script></body>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>-->
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -241,6 +242,7 @@
          console.log("isValid");
            $("#team1Score").css('border-color', 'red');
            document.getElementById("btnSubmit").disabled = true;
+           return isValid;
         }else{
            $("#team1Score").css('border-color', '');
            document.getElementById("btnSubmit").disabled = false;
@@ -256,6 +258,7 @@
         if(!isValid){
            $("#team2Score").css('border-color', 'red');
            document.getElementById("btnSubmit").disabled = true;
+           return isValid;
         }else{
            $("#team2Score").css('border-color', '');
            document.getElementById("btnSubmit").disabled = false;
@@ -271,16 +274,12 @@
          var overArr = team1Over.split(".");
          var team1runs = $('#team1Score').val();
          var totalRuns = ((overArr[0]*6)+parseInt(overArr[1]))*6;
-         console.log("total :",totalRuns,"overs: ", overArr[0], "balls: ",overArr[1]);
+         console.log("total run1 :",totalRuns,"overs: ", overArr[0], "balls: ",overArr[1]);
          var runs = overArr;
          if(team1runs > totalRuns){
              console.log("Please enter valid score for team1");
-<!--            $("#player_namemsg3").html("Please enter valid score for team1");-->
-            alert("Please enter valid score");
-            $("#team1Score").css('border-color', 'red');
-            document.getElementById("btnSubmit").disabled = true;
-            return false;
-         }else if(!isValid){
+            $("#player_namemsg3").html("Please enter valid score for team1");
+<!--            alert("Please enter valid score");-->
             $("#team1Score").css('border-color', 'red');
             document.getElementById("btnSubmit").disabled = true;
             return false;
@@ -290,6 +289,7 @@
             $("#team1Score").css('border-color', '');
             document.getElementById("btnSubmit").disabled = false;
          }
+         return true;
       }
 
         function validateRuns2(){
@@ -302,13 +302,8 @@
          console.log("Prrrr");
          if(team2runs > totalRuns){
              console.log("Please enter valid score for team1");
-<!--            $("#player_namemsg3").html("Please enter valid score for team1");-->
+            $("#player_namemsg3").html("Please enter valid score for team1");
             alert("Please enter valid score");
-            $("#team2Score").css('border-color', 'red');
-            document.getElementById("btnSubmit").disabled = true;
-            return false;
-         }
-         else if(!isValid){
             $("#team2Score").css('border-color', 'red');
             document.getElementById("btnSubmit").disabled = true;
             return false;
@@ -318,15 +313,16 @@
             $("#team2Score").css('border-color', '');
             document.getElementById("btnSubmit").disabled = false;
          }
+         return true;
       }
-
      function ValidateOver1() {
         var isValid = false;
         var regex = /^\d+(\.[1-5])?$/;
         isValid = regex.test(document.getElementById("team1Over").value);
         document.getElementById("spnError3").style.display = !isValid ? "block" : "none";
         over = $("#team1Over").val();
-        console.log("hello : ",over);
+        console.log("hello-1 : ",over);
+        console.log(isValid);
          if(over > 20){
             $("#player_namemsg3").html("Overs can not be more than 20");
             $("#team1Over").css('border-color', 'red');
@@ -343,9 +339,9 @@
              $("#team1Over").css('border-color', '');
          }
          validateRuns1();
+         console.log(isValid);
         return isValid;
     }
-
        function ValidateOver2() {
         var isValid = false;
         var regex = /^\d+(\.[1-5])?$/;
@@ -357,11 +353,13 @@
             $("#player_namemsg4").html("Overs can not be more than 20");
             $("#team2Over").css('border-color', 'red');
             return false;
-         }else if(!isValid){
+         }
+         else if(!isValid){
             $("#team2Over").css('border-color', 'red');
             document.getElementById("btnSubmit").disabled = true;
             return false;
-         }else{
+         }
+         else{
             document.getElementById("btnSubmit").disabled = false;
             $("#player_namemsg4").html("");
             $("#team2Over").css('border-color', '');
@@ -371,11 +369,12 @@
     }
 
     function btnSubmit1(){
-         if(ValidateOver1() || ValidateOver2() || validateTeam1Score() || validateTeam2Score()){
+         if(!validateTeam1Score() || !ValidateOver1() || !validateTeam2Score() || !ValidateOver2() ){
+         console.log("It is working");
              document.getElementById("btnSubmit").disabled = true;
-<!--             $("#player_namemsg4").html("Please fill all the fields");-->
-<!--             $("#team2Over").css('border-color', 'red');-->
+             $("#errorMessage").html("Please fill all the fields");
          }
     }
 </script>
+</body>
 </html>

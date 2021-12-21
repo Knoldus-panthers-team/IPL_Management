@@ -3,7 +3,6 @@ package com.knoldus.kup.ipl.IPL_Management_System.models;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -28,6 +27,15 @@ public class Player {
     @JoinColumn(name = "country_id")
     private Country country;
     private String role;
+
+    public Player(Long id, String name, Country country, Team team) {
+        this.id = id;
+        this.name = name;
+        this.team = team;
+        this.country = country;
+    }
+
+    public Player(){}
 
     public Long getId() {
         return id;

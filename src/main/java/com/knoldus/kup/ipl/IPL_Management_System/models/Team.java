@@ -45,6 +45,14 @@ public class Team {
             cascade = CascadeType.ALL)
     private List<Match> tossWinmatches;
 
+    public Team(Long id, String name, City city) {
+        this.id = id;
+        this.name = name;
+        this.city = city;
+    }
+
+    public Team(){}
+
     public Long getId() {
         return id;
     }

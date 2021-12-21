@@ -61,6 +61,14 @@ public class Match {
     @JoinColumn(name = "team_id2")
     private Team team2;
 
+    public Match(Long id, String matchDate, Venue venue, Team team1, Team team2) {
+        this.id = id;
+        this.matchDate = matchDate;
+        this.venue = venue;
+        this.team1 = team1;
+        this.team2 = team2;
+    }
+    public Match(){}
 
     public Long getId() {
         return id;

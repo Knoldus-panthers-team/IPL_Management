@@ -24,6 +24,14 @@ public class City {
     @OneToMany(mappedBy = "city")
     private Set<Team> teams;
 
+    public City(Long id, String cityName, Country country) {
+        this.id = id;
+        this.cityName = cityName;
+        this.country = country;
+    }
+
+    public City(){}
+
     public String getCityName() {
         return cityName;
     }

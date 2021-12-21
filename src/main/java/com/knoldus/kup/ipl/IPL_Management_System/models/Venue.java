@@ -14,8 +14,16 @@ public class Venue {
 
     @ManyToOne
     @JoinColumn(name = "city_id")
-    @Min(value = 1, message = "please select a city")
+//    @Min(value = 1, message = "please select a city")
     private City city;
+
+    public Venue(Long id, String name, City city) {
+        this.id = id;
+        this.name = name;
+        this.city = city;
+    }
+
+    public Venue() {}
 
     public String getName() {
         return name;

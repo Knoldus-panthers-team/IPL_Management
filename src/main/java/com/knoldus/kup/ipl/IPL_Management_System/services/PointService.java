@@ -7,16 +7,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
+import java.util.Optional;
 
 @Service
 public class PointService {
 
     @Autowired
-    PointRepository pointRepository;
+    private PointRepository pointRepository;
 
     private static final DecimalFormat df = new DecimalFormat("0.000");
 
-    public void updatePointTable(Match match){
+
+    public PointTable createNewTable(PointTable pointTableTeam){
+        pointTableTeam=new PointTable();
+        pointTableTeam.setTotalMatch(0);
+        pointTableTeam.setWin(0);
+        pointTableTeam.setLose(0);
+        pointTableTeam.setPoints(0);
+        pointTableTeam.setNetRunRate(0);
+        return pointTableTeam;
+    }
+
+    public void addPointTable(Match match){
 
         double team1Over = Double.parseDouble(match.getTeam1Over());
         double team2Over = Double.parseDouble(match.getTeam2Over());;
@@ -30,31 +42,25 @@ public class PointService {
         int team1Runs= Integer.parseInt(match.getTeam1Score());
         int team2Runs = Integer.parseInt(match.getTeam2Score());
 
-          double runRate1 = team1Runs/team1Over;
-          double runRate2 = team2Runs/team2Over;
+        double runRate1 = team1Runs/team1Over;
+        double runRate2 = team2Runs/team2Over;
 
         if (pointTableTeam1==null) {
-            System.out.println("point- on null---------------"+match.getResult());
-            pointTableTeam1=new PointTable();
+            pointTableTeam1 = this.createNewTable(pointTableTeam1);
             pointTableTeam1.setTeam(match.getTeam1());
-            pointTableTeam1.setTotalMatch(0);
-            pointTableTeam1.setWin(0);
-            pointTableTeam1.setLose(0);
-            pointTableTeam1.setPoints(0);
-            pointTableTeam1.setNetRunRate(0);
             pointRepository.save(pointTableTeam1);
         }
 
         if (pointTableTeam2==null){
-            System.out.println("Runnig from pointservice----------------"+match.getResult());
-            pointTableTeam2=new PointTable();
+            pointTableTeam2 = this.createNewTable(pointTableTeam2);
+//            pointTableTeam2=new PointTable();
             pointTableTeam2.setTeam(match.getTeam2());
-            pointTableTeam2.setTotalMatch(0);
-            pointTableTeam2.setWin(0);
-            pointTableTeam2.setLose(0);
-            pointTableTeam2.setNetRunRate(0);
-            pointTableTeam2.setPoints(0);
-            pointRepository.save(pointTableTeam2);
+//            pointTableTeam2.setTotalMatch(0);
+//            pointTableTeam2.setWin(0);
+//            pointTableTeam2.setLose(0);
+//            pointTableTeam2.setNetRunRate(0);
+//            pointTableTeam2.setPoints(0);
+//            pointRepository.save(pointTableTeam2);
         }
 
         if(match.getTeam1().getName().equals(match.getMatchWinner())){
@@ -90,5 +96,9 @@ public class PointService {
 
         pointRepository.save(pointTableTeam1);
         pointRepository.save(pointTableTeam2);
+    }
+
+    public Optional<PointTable> getById(Long id){
+        return pointRepository.findById(id);
     }
 }
