@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,7 +17,6 @@ public class PointService {
     private PointRepository pointRepository;
 
     private static final DecimalFormat df = new DecimalFormat("0.000");
-
 
     public PointTable createNewTable(PointTable pointTableTeam){
         pointTableTeam=new PointTable();
@@ -98,6 +98,9 @@ public class PointService {
         pointRepository.save(pointTableTeam2);
     }
 
+    public List<PointTable> getAllTables(){
+        return (List<PointTable>) pointRepository.findAll();
+    }
     public Optional<PointTable> getById(Long id){
         return pointRepository.findById(id);
     }

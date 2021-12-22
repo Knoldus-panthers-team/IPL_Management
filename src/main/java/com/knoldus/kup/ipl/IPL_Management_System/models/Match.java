@@ -19,9 +19,6 @@ public class Match {
 //    @NotNull(message = "This filed is required")
     private String matchDate;
 
-//    @DateTimeFormat(pattern = "dd/MM/yyyy")
-//    private Date birtdate;
-
     private String team1Wickets;
     private String team2Wickets;
 

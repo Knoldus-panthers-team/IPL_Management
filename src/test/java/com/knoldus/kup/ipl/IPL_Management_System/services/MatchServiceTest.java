@@ -43,8 +43,6 @@ class MatchServiceTest {
 
     @BeforeEach
     void initializeService(){
-        this.matchService = new MatchService(this.matchRepository,this.venueRepository,
-                this.teamRepository);
         System.out.println("Started");
         City city1 = new City();
         City city2 = new City();

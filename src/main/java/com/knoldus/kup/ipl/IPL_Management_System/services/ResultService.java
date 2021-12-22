@@ -22,11 +22,25 @@ public class ResultService {
         String teamWinner;
         Team tossWinner = match.getTossWinnerTeam();
         String tossChoice = match.getTossChoice();
+        Long firstInningsTeam = 1L;
+        if(tossWinner.getId() == match.getTeam1().getId()){
+            if(tossChoice == "batting"){
+                firstInningsTeam = match.getTeam1().getId();
+            }else{
+                firstInningsTeam = match.getTeam2().getId();
+            }
+        }else if(tossWinner.getId() == match.getTeam2().getId()){
+            if(tossChoice == "batting"){
+                firstInningsTeam = match.getTeam2().getId();
+            }else{
+                firstInningsTeam = match.getTeam1().getId();
+            }
+        }
 
         if(team1Runs>team2Runs){
             System.out.println("team1"+tossChoice);
             teamWinner = match.getTeam1().getName();
-            if(tossChoice.equals("batting") ){         //won by runs
+            if(firstInningsTeam == match.getTeam1().getId()){         //won by runs
                 System.out.println(teamWinner+" won by "+(team1Runs-team2Runs)+" runs");
                 result = teamWinner+" won by "+(team1Runs-team2Runs)+" runs";
             }else { //won by wickets
@@ -36,7 +50,7 @@ public class ResultService {
         else {
             System.out.println("team2"+tossChoice);
             teamWinner = match.getTeam2().getName();
-            if(tossChoice.equals("batting")){       //won by runs
+            if(firstInningsTeam == match.getTeam2().getId()){       //won by runs
                 result = teamWinner+" won by "+(team2Runs-team1Runs)+" runs";
             }else { //won by wickets
                 result=teamWinner+" won by "+(10-team2Wickets)+" wickets";
