@@ -7,7 +7,9 @@ import com.knoldus.kup.ipl.IPL_Management_System.repository.TeamRepository;
 import com.knoldus.kup.ipl.IPL_Management_System.models.Player;
 import com.knoldus.kup.ipl.IPL_Management_System.models.Team;
 import com.knoldus.kup.ipl.IPL_Management_System.services.CityService;
+import com.knoldus.kup.ipl.IPL_Management_System.services.PlayerService;
 import com.knoldus.kup.ipl.IPL_Management_System.services.TeamService;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,15 +25,6 @@ import java.util.Set;
 @RequestMapping("/teams")
 public class TeamController {
 
-    @Autowired
-    private TeamRepository teamRepository;
-
-    @Autowired
-    PlayerRepository playerRepository;
-
-    @Autowired
-    CityRepository cityRepository;
-
     /*
     ***************************************** SERVICES ****************************************
      */
@@ -39,26 +32,15 @@ public class TeamController {
     TeamService teamService;
     @Autowired
     CityService cityService;
+    @Autowired
+    PlayerService playerService;
 
 
     @GetMapping("/addTeam")
     public String addTeamForm(Model model){
-        Team team = new Team();
-        model.addAttribute("team",team);
+        model.addAttribute("team",teamService.getNewTeamObject());
         return "addTeam";
     }
-
-    @GetMapping("/suggest-event")
-    public String suggestEvent(@RequestParam(value = "message", required = false) String message, Model model) {
-        model.addAttribute("message",message);
-        return "suggestEvent";
-    }
-
-//    @PostMapping("/suggest-event")
-//    public String receiveSuggestedEvent( RedirectAttributes redirectAttributes) {
-//        redirectAttributes.addAttribute("message", "Success");
-//        return "redirect:/suggest-event";
-//    }
 
     @PostMapping("/add")
     public String addTeam(Team team,BindingResult result,RedirectAttributes redirectAttributes){
@@ -70,7 +52,6 @@ public class TeamController {
             redirectAttributes.addFlashAttribute("alertType", "success");
         }
         else {
-            System.out.println("Total teams cannot exceed 15");
             redirectAttributes.addFlashAttribute("message", "Team can not be more than 15");
             redirectAttributes.addFlashAttribute("messageType", "team");
             redirectAttributes.addFlashAttribute("alertType", "error");
@@ -85,9 +66,9 @@ public class TeamController {
     }
 
     @GetMapping("/edit/{id}")
-    public String showUpdateForm(@PathVariable("id") long id,
+    public String UpdateForm(@PathVariable("id") long id,
                                  Model model) {
-        Team team = teamService.getTeam(id);
+        Team team = teamService.getTeamById(id).get();
         List<City> cities = cityService.getAllCities();
         model.addAttribute("team", team);
         model.addAttribute("cities", cities);
@@ -101,7 +82,6 @@ public class TeamController {
             return "update-team";
         }
         teamService.saveTeam(team);
-//        teamRepository.save(team);
         redirectAttributes.addFlashAttribute("message", "Team updated successfully");
         redirectAttributes.addFlashAttribute("messageType", "team");
         redirectAttributes.addFlashAttribute("alertType", "success");
@@ -111,32 +91,39 @@ public class TeamController {
 
     @GetMapping("/delete/{id}")
     public String deleteTeam(@PathVariable("id") long id, Model model,RedirectAttributes redirectAttributes) {
-//        Team team = teamService.getTeam(id);
-//        teamRepository.delete(team);
-
+        teamService.deleteTeam(id);
         redirectAttributes.addFlashAttribute("message", "Team deleted successfully");
         redirectAttributes.addFlashAttribute("messageType", "team");
         redirectAttributes.addFlashAttribute("alertType", "success");
-
         return "redirect:/ipl/admin";
     }
 
     @GetMapping("/players/{team_id}")
-    public String getPlayers(@PathVariable("team_id") Long team_id,Model model){
-        Set<Player> players = playerRepository.findByTeamId(Long.valueOf(team_id));
-        model.addAttribute("players",players);
-        System.out.println("--------------------------"+teamRepository.findById(team_id).get().getName() );
-        model.addAttribute("team", teamRepository.findById(team_id).get());
-
-        return "team-details";
+    public String getPlayers(@PathVariable("team_id") Long team_id,Model model, RedirectAttributes redirectAttributes){
+        if (playerService.getPlayersByTeamId(team_id).isPresent() && teamService.getTeamById(team_id).isPresent()){
+            Set<Player> players = playerService.getPlayersByTeamId(team_id).get();
+            model.addAttribute("players",players);
+            model.addAttribute("team", teamService.getTeamById(team_id).get());
+            return "team-details";
+        }
+        redirectAttributes.addFlashAttribute("message", "Team not found");
+        redirectAttributes.addFlashAttribute("messageType", "team");
+        redirectAttributes.addFlashAttribute("alertType", "error");
+        return "redirect:/ipl";
     }
 
     @GetMapping("/team/{team_id}")
-    public String getTeam(@PathVariable("team_id") Long team_id,Model model){
-        Set<Player> players = playerRepository.findByTeamId(Long.valueOf(team_id));
-        model.addAttribute("players",players);
-        model.addAttribute("team", teamRepository.findById(team_id).get());
-        return "admin-teams";
+    public String getTeam(@PathVariable("team_id") Long team_id,Model model, RedirectAttributes redirectAttributes){
+        if (playerService.getPlayersByTeamId(team_id).isPresent() && teamService.getTeamById(team_id).isPresent()){
+            Set<Player> players = playerService.getPlayersByTeamId(team_id).get();
+            model.addAttribute("players",players);
+            model.addAttribute("team", teamService.getTeamById(team_id).get());
+            return "admin-teams";
+        }
+        redirectAttributes.addFlashAttribute("message", "Team not found");
+        redirectAttributes.addFlashAttribute("messageType", "team");
+        redirectAttributes.addFlashAttribute("alertType", "error");
+        return "redirect:/ipl/admin";
     }
 
 

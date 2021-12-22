@@ -7,6 +7,9 @@ import com.knoldus.kup.ipl.IPL_Management_System.repository.PlayerRepository;
 import com.knoldus.kup.ipl.IPL_Management_System.repository.TeamRepository;
 import com.knoldus.kup.ipl.IPL_Management_System.models.Player;
 
+import com.knoldus.kup.ipl.IPL_Management_System.services.CountryService;
+import com.knoldus.kup.ipl.IPL_Management_System.services.PlayerService;
+import com.knoldus.kup.ipl.IPL_Management_System.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,19 +29,15 @@ import java.util.List;
 public class PlayerController {
 
     @Autowired
-    private PlayerRepository playerRepository;
-
+    PlayerService playerService;
     @Autowired
-    private TeamRepository teamRepository;
-
+    TeamService teamService;
     @Autowired
-    private CountryRepository countryRepository;
-
+    CountryService countryService;
 
     @GetMapping("/addForm")
     public String addForm(Model model){
-        Player player = new Player();
-        model.addAttribute("player",player);
+        model.addAttribute("player", playerService.getNewPlayerObject());
         return "add-player";
     }
 
@@ -47,10 +46,10 @@ public class PlayerController {
         if(bindingResult.hasErrors())
         { return "addPlayer"; }
         else {
-            Team team=teamRepository.findByName(player.getTeam().getName());
+            Team team = teamService.getByName(player.getTeam().getName()).get();
             if(team.getPlayers().size()<3) {
                 System.out.println("Team already full"+(team.getPlayers().size()<3)+"sixe: "+team.getPlayers().size());
-                playerRepository.save(player);
+                playerService.savePlayer(player);
                 redirectAttributes.addFlashAttribute("message", "Player added successfully");
                 redirectAttributes.addFlashAttribute("messageType", "player");
                 redirectAttributes.addFlashAttribute("alertType", "success");
@@ -67,11 +66,11 @@ public class PlayerController {
 
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") long id, Model model) {
-        Player player = playerRepository.findById(id)
+        Player player = playerService.getPlayerById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid player Id:" + id));
 
-        List<Team> teams = teamRepository.findAll();
-        List<Country> countries = (List<Country>) countryRepository.findAll();
+        List<Team> teams = teamService.getAllTeams();
+        List<Country> countries = countryService.getAllCountries();
 
         model.addAttribute("player", player);
         model.addAttribute("teams",teams);
@@ -85,17 +84,15 @@ public class PlayerController {
         if (bindingResult.hasErrors()) {
             return "update-player";
         }
+        playerService.savePlayer(player);
         redirectAttributes.addFlashAttribute("message", "Player updated successfully");
         redirectAttributes.addFlashAttribute("messageType", "player");
         redirectAttributes.addFlashAttribute("alertType", "success");
-        playerRepository.save(player);
         return "redirect:/ipl/admin";
     }
     @GetMapping("/delete/{id}")
     public String deletePlayer(@PathVariable("id") long id, Model model, RedirectAttributes redirectAttributes) {
-        Player player = playerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid player Id:" + id));
-        playerRepository.delete(player);
+        playerService.deletePlayer(id);
         redirectAttributes.addFlashAttribute("message", "Player deleted successfully");
         redirectAttributes.addFlashAttribute("messageType", "player");
         redirectAttributes.addFlashAttribute("alertType", "success");

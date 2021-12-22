@@ -40,7 +40,7 @@ class PlayerRepositoryTest {
         countryRepository.save(country);
         Team team = new Team(1L,"KKR", city);
         teamRepository.save(team);
-        Player player = new Player(1L,"Aasif Ali",country,team);
+        Player player = new Player(1L,"Aasif Ali",team,country,"Batsman");
         playerRepository.save(player);
         Boolean actual = Optional.of(playerRepository.findByTeamId(team.getId())).isPresent();
         assertThat(actual).isTrue();

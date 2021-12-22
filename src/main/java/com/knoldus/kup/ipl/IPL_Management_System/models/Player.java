@@ -28,11 +28,12 @@ public class Player {
     private Country country;
     private String role;
 
-    public Player(Long id, String name, Country country, Team team) {
+    public Player(Long id, String name, Team team, Country country, String role) {
         this.id = id;
         this.name = name;
         this.team = team;
         this.country = country;
+        this.role = role;
     }
 
     public Player(){}

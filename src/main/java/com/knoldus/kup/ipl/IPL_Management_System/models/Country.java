@@ -21,6 +21,13 @@ public class Country {
             cascade = CascadeType.ALL)
     private Set<Player> players;
 
+    public Country(Long id, String countryName) {
+        this.id = id;
+        this.countryName = countryName;
+    }
+
+    public Country(){}
+
     public Long getId() {
         return id;
     }

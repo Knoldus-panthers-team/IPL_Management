@@ -16,22 +16,19 @@ import static org.junit.jupiter.api.Assertions.*;
 class TeamRepositoryTest {
 
     @Autowired
-    private TeamRepository repository;
+    private TeamRepository teamRepository;
 
     @Autowired
     CityRepository cityRepository;
 
-//    @Autowired
-//    MockMvc mockMvc;
-
     @Test
-    void findByName() {
+    void findByPlayerName_ReturnTrueIfTeamFound() {
         City city = new City();
         city.setId(1L);
         cityRepository.save(city);
         Team team = new Team(1L,"KKR", city);
-        repository.save(team);
-        Boolean actual = Optional.of(repository.findByName(team.getName())).isPresent();
+        teamRepository.save(team);
+        Boolean actual = teamRepository.findByName((team.getName())).isPresent();
         assertThat(actual).isTrue();
     }
 }
