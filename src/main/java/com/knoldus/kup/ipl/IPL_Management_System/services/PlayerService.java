@@ -5,6 +5,7 @@ import com.knoldus.kup.ipl.IPL_Management_System.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,6 +25,10 @@ public class PlayerService {
 
     public void savePlayer(Player player){
         playerRepository.save(player);
+    }
+
+    public List<Player> getAllPlayers(){
+        return (List<Player>) playerRepository.findAll();
     }
 
     public Optional<Player> getPlayerById(Long id){

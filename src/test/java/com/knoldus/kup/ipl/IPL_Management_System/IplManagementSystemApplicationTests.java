@@ -9,5 +9,4 @@ class IplManagementSystemApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

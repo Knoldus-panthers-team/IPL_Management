@@ -56,9 +56,6 @@ public class ResultController {
         List<Venue> venues= venueService.getAllVenues();
         model.addAttribute("venues",venues);
 
-//        model.addAttribute("team1", match.getTeam1().getName());
-//        model.addAttribute("team2", match.getTeam2().getName());
-
         return "add-result";
     }
 
