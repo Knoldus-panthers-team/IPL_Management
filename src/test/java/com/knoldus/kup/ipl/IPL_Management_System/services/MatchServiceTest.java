@@ -8,6 +8,7 @@ import com.knoldus.kup.ipl.IPL_Management_System.repository.CityRepository;
 import com.knoldus.kup.ipl.IPL_Management_System.repository.MatchRepository;
 import com.knoldus.kup.ipl.IPL_Management_System.repository.TeamRepository;
 import com.knoldus.kup.ipl.IPL_Management_System.repository.VenueRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -37,7 +38,7 @@ class MatchServiceTest {
     @Autowired
     MatchService matchService;
 
-    Venue venue ;
+    Venue venue;
     Team team1;
     Team team2;
 

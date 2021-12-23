@@ -19,13 +19,13 @@ public class PointService {
     private static final DecimalFormat df = new DecimalFormat("0.000");
 
     public PointTable createNewTable(PointTable pointTableTeam){
-        pointTableTeam=new PointTable();
-        pointTableTeam.setTotalMatch(0);
-        pointTableTeam.setWin(0);
-        pointTableTeam.setLose(0);
-        pointTableTeam.setPoints(0);
-        pointTableTeam.setNetRunRate(0);
-        return pointTableTeam;
+        PointTable pointTableNew = new PointTable();
+        pointTableNew.setTotalMatch(0);
+        pointTableNew.setWin(0);
+        pointTableNew.setLose(0);
+        pointTableNew.setPoints(0);
+        pointTableNew.setNetRunRate(0);
+        return pointTableNew;
     }
 
     public void addPointTable(Match match){

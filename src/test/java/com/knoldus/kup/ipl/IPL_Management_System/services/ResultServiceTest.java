@@ -39,7 +39,7 @@ class ResultServiceTest {
     Venue venue ;
     Team team1;
     Team team2;
-    Match match1;
+    Match match1,match2;
 
     @BeforeEach
     void setUp(){
@@ -60,7 +60,7 @@ class ResultServiceTest {
         teamService.saveTeam(team1);
         teamService.saveTeam(team2);
         match1 = new Match(1L,"1/05/2021",venue,team1,team2);
-
+        match2 = new Match(2L,"2/05/2021",venue,team1,team2);
     }
 
     @Test
@@ -100,7 +100,7 @@ class ResultServiceTest {
     }
 
     @Test
-    void addPointTable_ReturnPointTableForBothTeams() {
+    void addPointTable_ReturnPointTableForBothTeamsWinTeam2() {
         match1.setTossWinnerTeam(team2);
         match1.setTossChoice("batting");
         match1.setTeam1Score("176");
@@ -117,7 +117,29 @@ class ResultServiceTest {
         int team2Point = tables.get(1).getPoints();
         String actualResult = tables.get(0).getTeam().getName()+": "+team1Point+","+
                 tables.get(1).getTeam().getName()+": "+team2Point;
-        String expectedResult = "KKR: 2,CSK: 0";
+        String expectedResult = "KKR: 2,CSK: 2";
+        assertEquals(expectedResult,actualResult);
+    }
+
+    @Test
+    void addPointTable_ReturnPointTableForBothTeamsWinTeam1() {
+        match2.setTossWinnerTeam(team1);
+        match2.setTossChoice("batting");
+        match2.setTeam1Score("175");
+        match2.setTeam2Score("176");
+        match2.setTeam1Over("19.2");
+        match2.setTeam2Over("20");
+        match2.setTeam1Wickets("6");
+        match2.setTeam2Wickets("3");
+        matchService.saveMatch(match2);
+        resultService.getResult(match2);
+        pointService.addPointTable(match2);
+        List<PointTable> tables = pointService.getAllTables();
+        int team1Point = tables.get(0).getPoints();
+        int team2Point = tables.get(1).getPoints();
+        String actualResult = tables.get(0).getTeam().getName()+": "+team1Point+","+
+                tables.get(1).getTeam().getName()+": "+team2Point;
+        String expectedResult = "KKR: 0,CSK: 2";
         assertEquals(expectedResult,actualResult);
     }
 }

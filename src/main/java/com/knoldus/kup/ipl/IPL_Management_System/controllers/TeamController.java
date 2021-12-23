@@ -1,15 +1,11 @@
 package com.knoldus.kup.ipl.IPL_Management_System.controllers;
 
 import com.knoldus.kup.ipl.IPL_Management_System.models.City;
-import com.knoldus.kup.ipl.IPL_Management_System.repository.CityRepository;
-import com.knoldus.kup.ipl.IPL_Management_System.repository.PlayerRepository;
-import com.knoldus.kup.ipl.IPL_Management_System.repository.TeamRepository;
 import com.knoldus.kup.ipl.IPL_Management_System.models.Player;
 import com.knoldus.kup.ipl.IPL_Management_System.models.Team;
 import com.knoldus.kup.ipl.IPL_Management_System.services.CityService;
 import com.knoldus.kup.ipl.IPL_Management_System.services.PlayerService;
 import com.knoldus.kup.ipl.IPL_Management_System.services.TeamService;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -68,10 +64,12 @@ public class TeamController {
     @GetMapping("/edit/{id}")
     public String UpdateForm(@PathVariable("id") long id,
                                  Model model) {
-        Team team = teamService.getTeamById(id).get();
-        List<City> cities = cityService.getAllCities();
-        model.addAttribute("team", team);
-        model.addAttribute("cities", cities);
+        if(teamService.getTeamById(id).isPresent()) {
+            Team team = teamService.getTeamById(id).get();
+            List<City> cities = cityService.getAllCities();
+            model.addAttribute("team", team);
+            model.addAttribute("cities", cities);
+        }
         return "update-team";
     }
 
@@ -99,23 +97,20 @@ public class TeamController {
     }
 
     @GetMapping("/players/{team_id}")
-    public String getPlayers(@PathVariable("team_id") Long team_id,Model model, RedirectAttributes redirectAttributes){
-        if (playerService.getPlayersByTeamId(team_id).isPresent() && teamService.getTeamById(team_id).isPresent()){
-            Set<Player> players = playerService.getPlayersByTeamId(team_id).get();
+    public String getPlayers(@PathVariable("team_id") Long team_id,Model model){
+        if (playerService.getPlayersByTeamId(team_id)!=null && teamService.getTeamById(team_id).isPresent()){
+            Set<Player> players = playerService.getPlayersByTeamId(team_id);
             model.addAttribute("players",players);
             model.addAttribute("team", teamService.getTeamById(team_id).get());
             return "team-details";
         }
-        redirectAttributes.addFlashAttribute("message", "Team not found");
-        redirectAttributes.addFlashAttribute("messageType", "team");
-        redirectAttributes.addFlashAttribute("alertType", "error");
         return "redirect:/ipl";
     }
 
     @GetMapping("/team/{team_id}")
     public String getTeam(@PathVariable("team_id") Long team_id,Model model, RedirectAttributes redirectAttributes){
-        if (playerService.getPlayersByTeamId(team_id).isPresent() && teamService.getTeamById(team_id).isPresent()){
-            Set<Player> players = playerService.getPlayersByTeamId(team_id).get();
+        if (playerService.getPlayersByTeamId(team_id)!=null && teamService.getTeamById(team_id).isPresent()){
+            Set<Player> players = playerService.getPlayersByTeamId(team_id);
             model.addAttribute("players",players);
             model.addAttribute("team", teamService.getTeamById(team_id).get());
             return "admin-teams";

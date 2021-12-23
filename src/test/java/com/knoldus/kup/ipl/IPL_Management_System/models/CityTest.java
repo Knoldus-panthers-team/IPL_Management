@@ -3,17 +3,12 @@ package com.knoldus.kup.ipl.IPL_Management_System.models;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CityTest {
-
-
-
 
     City city;
     Country country;
@@ -37,7 +32,7 @@ class CityTest {
     void getId() {
         Long expectedId=1L;
         Long actualId=city.getId();
-        assertTrue(expectedId==actualId);
+        assertEquals(expectedId,actualId);
     }
 
 
@@ -46,7 +41,7 @@ class CityTest {
     void getCityName() {
         String expectedCity="kolkata";
         String actualCity=city.getCityName();
-        assertTrue(expectedCity==actualCity);
+        assertEquals(expectedCity,actualCity);
     }
 
 
@@ -55,7 +50,7 @@ class CityTest {
     void getCountry() {
         String expectedCountry="India";
         String actualCountry=country.getCountryName();
-        assertTrue(expectedCountry==actualCountry);
+        assertEquals(expectedCountry,actualCountry);
     }
 
     @Test
@@ -63,13 +58,13 @@ class CityTest {
         city.setId(2L);
         Long actualId=city.getId();
         Long expectedId=2L;
-        assertTrue(expectedId==actualId);
+        assertEquals(expectedId,actualId);
     }
 
-    @Test
-    void setCityName() {
-
-    }
+//    @Test
+//    void setCityName() {
+//
+//    }
 
     @Test
     void getVenues() {
@@ -79,16 +74,16 @@ class CityTest {
 
     }
 
-    @Test
-    void setVenues() {
-
-    }
-
-
-
-    @Test
-    void setCountry() {
-    }
+//    @Test
+//    void setVenues() {
+//
+//    }
+//
+//
+//
+//    @Test
+//    void setCountry() {
+//    }
 
 
 }

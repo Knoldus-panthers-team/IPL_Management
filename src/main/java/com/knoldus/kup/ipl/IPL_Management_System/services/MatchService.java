@@ -32,7 +32,11 @@ public class MatchService {
         this.venueRepository = venueRepository;
         this.teamRepository = teamRepository;
     }
-    public void deleteMatch(final Long id){matchRepository.delete(this.getMatchById(id).get());}
+    public void deleteMatch(final Long id){
+        if(this.getMatchById(id).isPresent()){
+            matchRepository.delete(this.getMatchById(id).get());
+        }
+    }
 
     public void saveMatch( final Match match){
         matchRepository.save(match);

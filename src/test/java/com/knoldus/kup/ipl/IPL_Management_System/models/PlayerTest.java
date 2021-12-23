@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
-   @Autowired
-    Player player;
     Team team;
     Player player1;
     Country country;

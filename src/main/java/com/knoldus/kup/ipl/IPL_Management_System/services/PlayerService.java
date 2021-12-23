@@ -31,15 +31,15 @@ public class PlayerService {
         return (List<Player>) playerRepository.findAll();
     }
 
-    public Optional<Player> getPlayerById(Long id){
-        return playerRepository.findById(id);
+    public Player getPlayerById(Long id){
+        return playerRepository.findById(id).get();
     }
 
-    public Optional<Set<Player>> getPlayersByTeamId(Long team_id){
+    public Set<Player> getPlayersByTeamId(Long team_id){
         return playerRepository.findByTeamId(team_id);
     }
 
     public void deletePlayer(Long id){
-        playerRepository.delete(this.getPlayerById(id).get());
+        playerRepository.delete(this.getPlayerById(id));
     }
 }

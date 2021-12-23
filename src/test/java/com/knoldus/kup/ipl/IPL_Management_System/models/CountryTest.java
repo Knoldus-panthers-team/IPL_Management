@@ -17,14 +17,14 @@ class CountryTest {
     void getId() {
         Long expectedId=1L;
         Long actualId=country.getId();
-        assertTrue(actualId==expectedId);
+        assertEquals(actualId,expectedId);
     }
 
     @Test
     void getCountryName() {
         String expectedCountryName="India";
         String actualCountryName=country.getCountryName();
-        assertTrue(actualCountryName==expectedCountryName);
+        assertEquals(actualCountryName,expectedCountryName);
     }
 
 }
