@@ -19,11 +19,11 @@ public class Player {
     @NotNull
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, optional = false)
+    @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, optional = false)
+    @ManyToOne
     @JoinColumn(name = "country_id")
     private Country country;
     private String role;

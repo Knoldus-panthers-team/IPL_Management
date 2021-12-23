@@ -14,6 +14,10 @@ public class CountryService {
     @Autowired
     CountryRepository countryRepository;
 
+    public CountryService(CountryRepository countryRepository) {
+        this.countryRepository = countryRepository;
+    }
+
     public List<Country> getAllCountries(){
         return (List<Country>) countryRepository.findAll();
     }

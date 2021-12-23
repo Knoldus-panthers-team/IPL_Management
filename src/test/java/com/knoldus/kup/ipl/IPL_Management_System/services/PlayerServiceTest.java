@@ -7,12 +7,11 @@ import com.knoldus.kup.ipl.IPL_Management_System.models.Team;
 import com.knoldus.kup.ipl.IPL_Management_System.repository.CityRepository;
 import com.knoldus.kup.ipl.IPL_Management_System.repository.CountryRepository;
 import com.knoldus.kup.ipl.IPL_Management_System.repository.PlayerRepository;
-import com.knoldus.kup.ipl.IPL_Management_System.repository.TeamRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Set;
@@ -38,13 +37,11 @@ class PlayerServiceTest {
     CountryRepository countryRepository;
 
     Team team1,team2;
-    Player player1, player2;
     Country country;
 
     @BeforeEach
     void setUp(){
         this.playerService = new PlayerService(this.playerRepository);
-        System.out.println("Started");
         City city1 = new City();
         City city2 = new City();
         City city3 = new City();
@@ -62,8 +59,8 @@ class PlayerServiceTest {
         country = new Country(1L,"India");
         countryRepository.save(country);
 
-        player1=new Player(1L,"Rohit Sharma",team1,country,"Batsman");
-        player2=new Player(2L,"Virat Kohli",team1,country,"Batsman");
+        Player player1=new Player(1L,"Rohit Sharma",team1,country,"Batsman");
+        Player player2=new Player(2L,"Virat Kohli",team1,country,"Batsman");
         playerService.savePlayer(player1);
         playerService.savePlayer(player2);
 
