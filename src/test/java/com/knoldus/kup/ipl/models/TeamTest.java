@@ -1,5 +1,4 @@
-package com.knoldus.kup.ipl.IPL_Management_System.models;
-
+package com.knoldus.kup.ipl.models;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
