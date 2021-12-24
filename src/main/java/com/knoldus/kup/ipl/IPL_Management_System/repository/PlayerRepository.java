@@ -8,5 +8,5 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface PlayerRepository extends CrudRepository<Player, Long> {
-    public Optional<Set<Player>> findByTeamId(long team_id);
+    Set<Player> findByTeamId(Long team_id);
 }

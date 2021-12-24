@@ -1,8 +1,7 @@
 package com.knoldus.kup.ipl.IPL_Management_System.models;
 
-import javax.management.StandardEmitterMBean;
 import javax.persistence.*;
-import java.util.Set;
+
 
 @Entity
 @Table(name = "states")

@@ -1,20 +1,14 @@
 package com.knoldus.kup.ipl.IPL_Management_System.controllers;
 
 import com.knoldus.kup.ipl.IPL_Management_System.models.*;
-import com.knoldus.kup.ipl.IPL_Management_System.repository.*;
 import com.knoldus.kup.ipl.IPL_Management_System.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.time.LocalDate;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RequestMapping("ipl")
 @Controller
@@ -96,10 +90,5 @@ public class IPLController {
         Collections.sort(pointTables);
         model.addAttribute("pointTables",pointTables);
         return "dashboard";
-    }
-
-    @RequestMapping("/")
-    public String index(Model model){
-        return "index";
     }
 }

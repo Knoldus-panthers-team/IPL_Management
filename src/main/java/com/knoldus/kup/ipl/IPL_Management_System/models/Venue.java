@@ -1,7 +1,6 @@
 package com.knoldus.kup.ipl.IPL_Management_System.models;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 
 @Entity
 @Table(name = "venues")
