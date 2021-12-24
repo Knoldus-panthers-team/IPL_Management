@@ -18,8 +18,8 @@ public class TeamService {
         this.teamRepository = teamRepository;
     }
 
-    public void saveTeam(Team team){
-        teamRepository.save(team);
+    public Team saveTeam(Team team){
+        return teamRepository.save(team);
     }
 
     public Team getNewTeamObject(){
@@ -39,6 +39,6 @@ public class TeamService {
     }
 
     public void deleteTeam(Long id){
-        teamRepository.delete(this.getTeamById(id).get());
+        teamRepository.deleteById(id);
     }
 }
