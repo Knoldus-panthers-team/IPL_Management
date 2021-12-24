@@ -101,7 +101,7 @@ public class PointService {
     public List<PointTable> getAllTables(){
         return (List<PointTable>) pointRepository.findAll();
     }
-    public Optional<PointTable> getById(Long id){
-        return pointRepository.findById(id);
+    public PointTable getById(Long id){
+        return pointRepository.findById(id).get();
     }
 }
