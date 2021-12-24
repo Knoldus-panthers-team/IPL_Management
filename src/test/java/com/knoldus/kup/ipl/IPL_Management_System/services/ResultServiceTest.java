@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class ResultServiceTest {
 
-
     @Autowired
     MatchService matchService;
 
@@ -52,7 +51,6 @@ class ResultServiceTest {
         city2.setCityName("Chennai");
         cityRepository.save(city1);
         cityRepository.save(city2);
-
         venue = new Venue(1L,"Kolkata Stadium",city1);
         venueService.saveVenue(venue);
         team1 = new Team(1L,"KKR", city1);
@@ -60,7 +58,6 @@ class ResultServiceTest {
         teamService.saveTeam(team1);
         teamService.saveTeam(team2);
         match1 = new Match(1L,"1/05/2021",venue,team1,team2);
-
     }
 
     @Test
