@@ -1,39 +1,31 @@
 package com.knoldus.kup.ipl.IPL_Management_System.services;
 
-import com.knoldus.kup.ipl.IPL_Management_System.models.City;
-import com.knoldus.kup.ipl.IPL_Management_System.models.Match;
-import com.knoldus.kup.ipl.IPL_Management_System.models.Team;
-import com.knoldus.kup.ipl.IPL_Management_System.models.Venue;
+import com.knoldus.kup.ipl.IPL_Management_System.models.*;
 import com.knoldus.kup.ipl.IPL_Management_System.repository.CityRepository;
 import com.knoldus.kup.ipl.IPL_Management_System.repository.MatchRepository;
 import com.knoldus.kup.ipl.IPL_Management_System.repository.TeamRepository;
 import com.knoldus.kup.ipl.IPL_Management_System.repository.VenueRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class MatchServiceTest {
 
-    @Autowired
+    @MockBean
     MatchRepository matchRepository;
-
-    @Autowired
-    VenueRepository venueRepository;
-
-    @Autowired
-    TeamRepository teamRepository;
-
-    @Autowired
-    private CityRepository cityRepository;
 
     @Autowired
     MatchService matchService;
@@ -42,61 +34,55 @@ class MatchServiceTest {
     Team team1;
     Team team2;
 
-    @BeforeEach
-    void initializeService(){
-        System.out.println("Started");
-        City city1 = new City();
-        City city2 = new City();
-        city1.setId(1L);
-        city1.setCityName("Kolkata");
-        city2.setId(2L);
-        city2.setCityName("Chennai");
-        cityRepository.save(city1);
-        cityRepository.save(city2);
+    Match match1,match2,match3;
 
+    List<Match> matchesList;
+    @BeforeEach
+    void setUp(){
+        Country country = new Country(1L,"India");
+        City city1 = new City(1L,"Channai",country);
+        City city2 = new City(1L,"Kolkata",country);
         venue = new Venue(1L,"Kolkata Stadium",city1);
-        venueRepository.save(venue);
         team1 = new Team(1L,"KKR", city1);
         team2 = new Team(2L,"CSK", city2);
-        teamRepository.save(team1);
-        teamRepository.save(team2);
-        Match match1 = new Match(1L,"1/05/2021",venue,team1,team2);
-        Match match2 = new Match(2L,"3/05/2021",venue,team1,team2);
-        Match match3 = new Match(3L,"4/05/2021",venue,team1,team2);
-
-        matchRepository.save(match1);
-        matchRepository.save(match2);
+        match1= new Match(1L,"1/05/2021",venue,team1,team2);
+        match2 = new Match(2L,"3/05/2021",venue,team1,team2);
+        match3 = new Match(3L,"4/05/2021",venue,team1,team2);
+        matchesList = Arrays.asList(match1,match2,match3);
+        Mockito.when(matchRepository.findAll()).thenReturn(matchesList);
     }
 
     @Test
     void saveMatch_ReturnTrueIfSaved() {
-        Match match = new Match(4L,"5/05/2021",venue,team1,team2);
-        matchService.saveMatch(match);
-        assertTrue(matchService.getMatchById(match.getId()).isPresent());
+        Mockito.when(matchRepository.save(match1)).thenReturn(match1);
+        Match savedMatch = matchService.saveMatch(match1);
+        assertTrue(savedMatch.equals(match1));
     }
 
     @Test
     void getMatchById_ReturnTrueIfMatchFound() {
+        Mockito.when(matchRepository.findById(2L)).thenReturn(Optional.ofNullable(match2));
         Boolean actual = matchService.getMatchById(2L).isPresent();
         assertTrue(actual);
     }
 
     @Test
-    void getAllMatches_ReturnTrueIfFoundListIsGreaterThan1() {
+    void getAllMatches_ReturnTrueIfFoundListIsGreaterThan2() {
         int actualSize = matchService.getAllMatches().size();
-        assertTrue(actualSize > 1);
+        Assertions.assertThat(matchService.getAllMatches()).isEqualTo(matchesList);
+        assertTrue(actualSize > 2);
     }
 
     @Test
-    void deleteMatch_ReturnFalseIfMatchDeleted() {
-        matchService.deleteMatch(1L);
-        boolean isExist = matchService.getMatchById(1L).isPresent();
-        assertFalse(isExist);
+    void deleteMatch_ReturnTrueIfMatchDeleted() {
+        matchService.deleteMatch(match1.getId());
+        Mockito.verify(matchRepository, Mockito.times(1))
+                .deleteById(match1.getId());
     }
 
     @Test
     void isSlotBooked_ReturnTrueIfSlotIsAlreadyBooked() {
-        Match match = new Match(5L,"1/05/2021",venue,team1,team2);
+        Match match = new Match(4L,"1/05/2021",venue,team1,team2);
         boolean isBooked = matchService.isSlotBooked(match);
         assertTrue(isBooked);
     }
@@ -107,7 +93,6 @@ class MatchServiceTest {
         boolean isBooked = matchService.isSlotBooked(match);
         assertTrue(!isBooked);
     }
-
 
     @Test
     void isTeamSame_ReturnTrueIfBothTeamSame() {
@@ -128,6 +113,5 @@ class MatchServiceTest {
         Match match = matchService.getNewMatch();
         Match expected = new Match();
         System.out.println(expected.getClass());
-        assertInstanceOf(expected.getClass(), match);
     }
 }

@@ -33,13 +33,12 @@ public class MatchService {
         this.teamRepository = teamRepository;
     }
     public void deleteMatch(final Long id){
-        if(this.getMatchById(id).isPresent()){
-            matchRepository.delete(this.getMatchById(id).get());
-        }
+        matchRepository.deleteById(id);
     }
 
-    public void saveMatch( final Match match){
+    public Match saveMatch(final Match match){
         matchRepository.save(match);
+        return match;
     }
 
     public Optional<Match> getMatchById(Long id){

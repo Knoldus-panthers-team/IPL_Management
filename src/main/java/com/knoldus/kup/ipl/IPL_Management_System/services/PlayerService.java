@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -23,8 +22,9 @@ public class PlayerService {
         return new Player();
     }
 
-    public void savePlayer(Player player){
+    public Player savePlayer(Player player){
         playerRepository.save(player);
+        return player;
     }
 
     public List<Player> getAllPlayers(){
@@ -35,11 +35,11 @@ public class PlayerService {
         return playerRepository.findById(id).get();
     }
 
-    public Set<Player> getPlayersByTeamId(Long team_id){
-        return playerRepository.findByTeamId(team_id);
+    public Set<Player> getPlayersByTeamId(Long teamId){
+        return playerRepository.findByTeamId(teamId);
     }
 
     public void deletePlayer(Long id){
-        playerRepository.delete(this.getPlayerById(id));
+        playerRepository.deleteById(id);
     }
 }

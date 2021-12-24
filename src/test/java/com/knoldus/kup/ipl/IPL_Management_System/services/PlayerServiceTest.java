@@ -14,13 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
@@ -29,17 +30,8 @@ class PlayerServiceTest {
     @MockBean
     PlayerRepository playerRepository;
 
-    @Mock
+    @Autowired
     PlayerService playerService;
-
-    @MockBean
-    CityRepository cityRepository;
-
-    @MockBean
-    CountryRepository countryRepository;
-
-    @MockBean
-    TeamRepository teamRepository;
 
     Player player1,player2,player3;
     Set<Player> playersList;
@@ -53,16 +45,13 @@ class PlayerServiceTest {
         city1.setCityName("Kolkata");
         city2.setId(2L);
         city2.setCityName("Chennai");
-        cityRepository.save(city1);
-        cityRepository.save(city2);
+
         Team team1, team2;
         Country country;
         team1 = new Team(1L,"KKR", city1);
         team2 = new Team(2L,"CSK", city2);
-        teamRepository.save(team1);
-        teamRepository.save(team2);
+
         country = new Country(1L,"India");
-        countryRepository.save(country);
         player1 = new Player(1L,"Rohit Sharma",team1,country,"Batsman");
         player2 = new Player(2L,"Virat Kohli",team1,country,"Batsman");
         player3 = new Player(3L,"Virat Kohli",team1,country,"Batsman");
@@ -80,7 +69,10 @@ class PlayerServiceTest {
 
     @Test
     void savePlayer() {
-
+        Mockito.when(playerRepository.save(player1)).thenReturn(player1);
+        Player player = playerService.savePlayer(player1);
+        assertNotNull(player);
+        assertEquals(player.getTeam(),player1.getTeam());
     }
 
     @Test
@@ -104,14 +96,10 @@ class PlayerServiceTest {
         assertThat(playerService.getPlayersByTeamId(1L)).isEqualTo(playersList);
     }
 
-//    @Test
-//    void deletePlayer() {
-//        playerService.deletePlayer(player1.getId());
-//        Mockito.verify(playerRepository, Mockito.times(1))
-//                .deleteById(player1.getId());
-//    }
-
-//    when(mock.isOk()).thenReturn(true);
-//    when(mock.isOk()).thenThrow(exception);
-//    doThrow(exception).when(mock).someVoidMethod();
+    @Test
+    void deletePlayer() {
+        playerService.deletePlayer(player1.getId());
+        Mockito.verify(playerRepository, Mockito.times(1))
+                .deleteById(player1.getId());
+    }
 }
