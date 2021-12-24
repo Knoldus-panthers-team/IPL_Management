@@ -10,8 +10,6 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CityTest {
-
-
     City city;
     Country country;
     Venue venue;
