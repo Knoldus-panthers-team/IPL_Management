@@ -1,6 +1,7 @@
 package com.knoldus.kup.ipl.IPL_Management_System.models;
 
-import org.springframework.stereotype.Service;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -8,7 +9,6 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "players")
-@Service
 public class Player {
     @Id
     @Column(name = "id", nullable = false, insertable = true)
@@ -20,12 +20,14 @@ public class Player {
     private String name;
 
     @ManyToOne
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "team_id")
     private Team team;
 
     @ManyToOne
     @JoinColumn(name = "country_id")
     private Country country;
+
     private String role;
 
     public Player(Long id, String name, Team team, Country country, String role) {
@@ -76,4 +78,5 @@ public class Player {
         this.role = role;
         return role;
     }
+
 }

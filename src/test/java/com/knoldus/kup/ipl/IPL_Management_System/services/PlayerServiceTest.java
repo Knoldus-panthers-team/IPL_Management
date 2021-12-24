@@ -7,95 +7,99 @@ import com.knoldus.kup.ipl.IPL_Management_System.models.Team;
 import com.knoldus.kup.ipl.IPL_Management_System.repository.CityRepository;
 import com.knoldus.kup.ipl.IPL_Management_System.repository.CountryRepository;
 import com.knoldus.kup.ipl.IPL_Management_System.repository.PlayerRepository;
+import com.knoldus.kup.ipl.IPL_Management_System.repository.TeamRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.*;
 
-import java.util.List;
-import java.util.Set;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+@ExtendWith(MockitoExtension.class)
 @SpringBootTest
 class PlayerServiceTest {
 
-    @Autowired
-    TeamService teamService;
+    @MockBean
+    PlayerRepository playerRepository;
 
     @Autowired
     PlayerService playerService;
 
-    @Autowired
-    CityRepository cityRepository;
-
-    @Autowired
-    PlayerRepository playerRepository;
-
-    @Autowired
-    CountryRepository countryRepository;
-
-    Team team1,team2;
-    Country country;
+    Player player1,player2,player3;
+    Set<Player> playersList;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         this.playerService = new PlayerService(this.playerRepository);
         City city1 = new City();
         City city2 = new City();
-        City city3 = new City();
         city1.setId(1L);
         city1.setCityName("Kolkata");
         city2.setId(2L);
         city2.setCityName("Chennai");
-        cityRepository.save(city1);
-        cityRepository.save(city2);
 
+        Team team1, team2;
+        Country country;
         team1 = new Team(1L,"KKR", city1);
         team2 = new Team(2L,"CSK", city2);
-        teamService.saveTeam(team1);
-        teamService.saveTeam(team2);
+
         country = new Country(1L,"India");
-        countryRepository.save(country);
-
-        Player player1=new Player(1L,"Rohit Sharma",team1,country,"Batsman");
-        Player player2=new Player(2L,"Virat Kohli",team1,country,"Batsman");
-        playerService.savePlayer(player1);
-        playerService.savePlayer(player2);
-
+        player1 = new Player(1L,"Rohit Sharma",team1,country,"Batsman");
+        player2 = new Player(2L,"Virat Kohli",team1,country,"Batsman");
+        player3 = new Player(3L,"Virat Kohli",team1,country,"Batsman");
+        playersList = new HashSet<>();
+        playersList.add(player1);
+        playersList.add(player2);
+        playersList.add(player3);
     }
 
     @Test
-    void getNewPlayerObject_CorrectIfReturnNewPlayerObject() {
-        Player actual = playerService.getNewPlayerObject();
-        assertInstanceOf(Player.class, actual);
+    void getNewPlayerObject() {
+        Player player = new Player();
+        assertThat(playerService.getNewPlayerObject().getClass()).isEqualTo(player.getClass());
     }
 
     @Test
-    void savePlayer_ReturnTrueIfPlayerSaved() {
-        Player player = new Player(3L,"Hardik Pandya",team1,country,"Batsman");
-        playerService.savePlayer(player);
-        assertTrue(playerService.getPlayerById(player.getId()).isPresent());
+    void savePlayer() {
+        Mockito.when(playerRepository.save(player1)).thenReturn(player1);
+        Player player = playerService.savePlayer(player1);
+        assertNotNull(player);
+        assertEquals(player.getTeam(),player1.getTeam());
     }
 
     @Test
-    void getPlayerById_ReturnTrueIfPlayerFound() {
-        Boolean actual = playerService.getPlayerById(2L).isPresent();
-        assertTrue(actual);
+    void getAllPlayers() {
+        List<Player> intoList = new ArrayList<>();
+        intoList.addAll(playersList);
+        Mockito.when(playerRepository.findAll()).thenReturn(intoList);
+        assertThat(playerService.getAllPlayers()).isEqualTo(intoList);
+        assertTrue(playerService.getAllPlayers().size()>1);
     }
 
     @Test
-    void getPlayersByTeamId_ReturnTrueIfPlayersFoundByTeam() {
-        Set<Player> players = playerService.getPlayersByTeamId(1L).get();
-        System.out.println(players.size());
-        assertTrue(players.size()>1);
-
+    void getPlayerById() {
+        Mockito.when(playerRepository.findById(1L)).thenReturn(Optional.of(player1));
+        assertThat(playerService.getPlayerById(1L)).isEqualTo(player1);
     }
 
     @Test
-    void deletePlayer_ReturnFalseIfPlayerIsDeleted() {
-        playerService.deletePlayer(1L);
-        assertFalse(playerService.getPlayerById(1L).isPresent());
+    void getPlayersByTeamId() {
+        Mockito.when(playerRepository.findByTeamId(1L)).thenReturn(playersList);
+        assertThat(playerService.getPlayersByTeamId(1L)).isEqualTo(playersList);
+    }
+
+    @Test
+    void deletePlayer() {
+        playerService.deletePlayer(player1.getId());
+        Mockito.verify(playerRepository, Mockito.times(1))
+                .deleteById(player1.getId());
     }
 }

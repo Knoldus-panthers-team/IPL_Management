@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
+
     @Autowired
     Team team;
     Player player1;
@@ -17,10 +18,7 @@ class PlayerTest {
     void setUp(){
         city=new City(1L,"Mumbai",country);
         player1=new Player(1L,"Rohit",team=new Team(1L,"MI",city),country=new Country(1L,"India"),"Batsman");
-
-
     }
-
 
     @Test
     void getId() {
@@ -34,8 +32,6 @@ class PlayerTest {
         Long expectedId=2L;
         Long actualId = player1.getId();
         assertEquals(expectedId,actualId);
-
-
     }
 
     @Test
@@ -52,7 +48,6 @@ class PlayerTest {
         String actualName=player1.getName();
         assertEquals(expectedName,actualName);
     }
-
 
     @Test
     void getTeam() {
@@ -91,7 +86,6 @@ class PlayerTest {
         String actualRole=player1.getRole();
         assertTrue(expectedRole.equals(actualRole));
     }
-
 
     @Test
     void setRole() {

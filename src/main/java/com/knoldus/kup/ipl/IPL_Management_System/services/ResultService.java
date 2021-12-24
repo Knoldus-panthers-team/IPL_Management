@@ -23,14 +23,15 @@ public class ResultService {
         Team tossWinner = match.getTossWinnerTeam();
         String tossChoice = match.getTossChoice();
         Long firstInningsTeam = 1L;
-        if(tossWinner.getId() == match.getTeam1().getId()){
-            if(tossChoice == "batting"){
+
+        if(tossWinner.getId().equals(match.getTeam1().getId())){
+            if(tossChoice.equals("batting")){
                 firstInningsTeam = match.getTeam1().getId();
             }else{
                 firstInningsTeam = match.getTeam2().getId();
             }
-        }else if(tossWinner.getId() == match.getTeam2().getId()){
-            if(tossChoice == "batting"){
+        }else if(tossWinner.getId().equals(match.getTeam2().getId())){
+            if(tossChoice.equals("batting")){
                 firstInningsTeam = match.getTeam2().getId();
             }else{
                 firstInningsTeam = match.getTeam1().getId();
@@ -38,10 +39,8 @@ public class ResultService {
         }
 
         if(team1Runs>team2Runs){
-            System.out.println("team1"+tossChoice);
             teamWinner = match.getTeam1().getName();
-            if(firstInningsTeam == match.getTeam1().getId()){         //won by runs
-                System.out.println(teamWinner+" won by "+(team1Runs-team2Runs)+" runs");
+            if(firstInningsTeam.equals(match.getTeam1().getId())){         //won by runs
                 result = teamWinner+" won by "+(team1Runs-team2Runs)+" runs";
             }else { //won by wickets
                 result = teamWinner+" won by "+(10-team1Wickets)+" wickets";
@@ -50,7 +49,7 @@ public class ResultService {
         else {
             System.out.println("team2"+tossChoice);
             teamWinner = match.getTeam2().getName();
-            if(firstInningsTeam == match.getTeam2().getId()){       //won by runs
+            if(firstInningsTeam.equals(match.getTeam2().getId())){       //won by runs
                 result = teamWinner+" won by "+(team2Runs-team1Runs)+" runs";
             }else { //won by wickets
                 result=teamWinner+" won by "+(10-team2Wickets)+" wickets";

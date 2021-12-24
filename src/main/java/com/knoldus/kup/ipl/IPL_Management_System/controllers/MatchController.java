@@ -4,8 +4,6 @@ import com.knoldus.kup.ipl.IPL_Management_System.models.Match;
 import com.knoldus.kup.ipl.IPL_Management_System.models.Team;
 import com.knoldus.kup.ipl.IPL_Management_System.models.Venue;
 import com.knoldus.kup.ipl.IPL_Management_System.repository.MatchRepository;
-import com.knoldus.kup.ipl.IPL_Management_System.repository.TeamRepository;
-import com.knoldus.kup.ipl.IPL_Management_System.repository.VenueRepository;
 import com.knoldus.kup.ipl.IPL_Management_System.services.MatchService;
 import com.knoldus.kup.ipl.IPL_Management_System.services.TeamService;
 import com.knoldus.kup.ipl.IPL_Management_System.services.VenueService;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,7 +60,7 @@ public class MatchController {
 
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") long id, Model model) {
-        Match match = matchService.getMatchById(id).get();
+        Match match = matchService.getMatchById(id).orElseThrow(()->new IllegalArgumentException("Invalid match id: "+id));
         List<Venue> venues = (List<Venue>) venueService.getAllVenues();
         List<Team> teams = (List<Team>) teamService.getAllTeams();
         model.addAttribute("venues",venues);
@@ -87,9 +84,6 @@ public class MatchController {
             redirectAttributes.addFlashAttribute("alertType", "error");
             return "redirect:/matches/edit/"+match.getId();
         }
-//        if (bindingResult.hasErrors()){
-//            return "update-match";
-//        }
         matchRepository.save(match);
         redirectAttributes.addFlashAttribute("message", "Match rescheduled successfully");
         redirectAttributes.addFlashAttribute("messageType", "match");
@@ -102,7 +96,6 @@ public class MatchController {
         List<Match> matches = matchService.getAllMatches();
         model.addAttribute("match",matchService.getNewMatch());
         model.addAttribute("matchList",matches);
-//        System.out.println(matches.stream().findFirst().get().getTeam().getPlayers().stream().findFirst().get().getName());
         return "match-details";
     }
 

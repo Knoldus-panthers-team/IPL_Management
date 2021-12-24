@@ -10,9 +10,11 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CityTest {
-    @Autowired City city;
-    @Autowired Country country;
-    @Autowired Venue venue;
+
+
+    City city;
+    Country country;
+    Venue venue;
     Set<Venue> venues=new HashSet<>();
 
 
@@ -26,17 +28,15 @@ class CityTest {
         city.setVenues(venues);
 
     }
-    @Test
-    public void testCity(){
 
-    }
 
     @Test
     void testGetCityName() {
         String expectedCity="kolkata";
         String actualCity=city.getCityName();
-        assertTrue(expectedCity==actualCity);
+        assertEquals(expectedCity,actualCity);
     }
+
 
     @Test
     void testSetCityName() {

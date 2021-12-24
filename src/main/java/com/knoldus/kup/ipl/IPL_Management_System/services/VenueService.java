@@ -17,8 +17,8 @@ public class VenueService {
         this.venueRepository = venueRepository;
     }
 
-    public void saveVenue(Venue venue){
-        venueRepository.save(venue);
+    public Venue saveVenue(Venue venue){
+        return venueRepository.save(venue);
     }
 
     public List<Venue> getAllVenues(){

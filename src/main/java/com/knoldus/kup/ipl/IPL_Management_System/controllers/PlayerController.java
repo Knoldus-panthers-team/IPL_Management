@@ -2,9 +2,6 @@ package com.knoldus.kup.ipl.IPL_Management_System.controllers;
 
 import com.knoldus.kup.ipl.IPL_Management_System.models.Country;
 import com.knoldus.kup.ipl.IPL_Management_System.models.Team;
-import com.knoldus.kup.ipl.IPL_Management_System.repository.CountryRepository;
-import com.knoldus.kup.ipl.IPL_Management_System.repository.PlayerRepository;
-import com.knoldus.kup.ipl.IPL_Management_System.repository.TeamRepository;
 import com.knoldus.kup.ipl.IPL_Management_System.models.Player;
 
 import com.knoldus.kup.ipl.IPL_Management_System.services.CountryService;
@@ -46,19 +43,19 @@ public class PlayerController {
         if(bindingResult.hasErrors())
         { return "addPlayer"; }
         else {
-            Team team = teamService.getByName(player.getTeam().getName()).get();
-            if(team.getPlayers().size()<3) {
-                System.out.println("Team already full"+(team.getPlayers().size()<3)+"sixe: "+team.getPlayers().size());
-                playerService.savePlayer(player);
-                redirectAttributes.addFlashAttribute("message", "Player added successfully");
-                redirectAttributes.addFlashAttribute("messageType", "player");
-                redirectAttributes.addFlashAttribute("alertType", "success");
-                System.out.println(team.getPlayers().size());
-            }else {
-                System.out.println("Team already full");
-                redirectAttributes.addFlashAttribute("message", "Players can not be more than 15");
-                redirectAttributes.addFlashAttribute("messageType", "player");
-                redirectAttributes.addFlashAttribute("alertType", "error");
+            if(teamService.getByName(player.getTeam().getName()).isPresent()) {
+                Team team = teamService.getByName(player.getTeam().getName()).get();
+                if (team.getPlayers().size() < 3) {
+                    playerService.savePlayer(player);
+                    redirectAttributes.addFlashAttribute("message", "Player added successfully");
+                    redirectAttributes.addFlashAttribute("messageType", "player");
+                    redirectAttributes.addFlashAttribute("alertType", "success");
+                    System.out.println(team.getPlayers().size());
+                } else {
+                    redirectAttributes.addFlashAttribute("message", "Players can not be more than 15");
+                    redirectAttributes.addFlashAttribute("messageType", "player");
+                    redirectAttributes.addFlashAttribute("alertType", "error");
+                }
             }
         }
         return "redirect:/ipl/admin";
@@ -66,8 +63,7 @@ public class PlayerController {
 
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") long id, Model model) {
-        Player player = playerService.getPlayerById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid player Id:" + id));
+        Player player = playerService.getPlayerById(id);
 
         List<Team> teams = teamService.getAllTeams();
         List<Country> countries = countryService.getAllCountries();
