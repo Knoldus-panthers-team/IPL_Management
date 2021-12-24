@@ -1,8 +1,7 @@
 package com.knoldus.kup.ipl.IPL_Management_System.models;
 
-import com.knoldus.kup.ipl.IPL_Management_System.validation.VenueValidate;
-
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,7 +15,7 @@ public class Match {
 
     private Long id;
 
-//    @NotNull(message = "This filed is required")
+    @NotNull(message = "This filed is required")
     private String matchDate;
 
     private String team1Wickets;
@@ -43,11 +42,8 @@ public class Match {
     private String team1Over;
     private String team2Over;
 
-//    private String playerOfMatch;
-
     @ManyToOne
     @JoinColumn(name = "venue_id")
-//    @VenueValidate(message = "This slot is booked")
     private Venue venue;
 
     @ManyToOne
@@ -95,7 +91,6 @@ public class Match {
         }else {
             this.matchDate = matchDate;
         }
-//        this.matchDate = matchDate;
     }
 
     public String getTeam1Wickets() {
@@ -156,22 +151,8 @@ public class Match {
     }
 
     public void setTeam1Over(String team1Over) {
-        //        if (!team1Over.equals(null)){
-//            this.team1Over = team1Over;
-//        }
-//        this.team1Over = "Yet to bat";
         this.team1Over = team1Over;
     }
-
-//    public String getTeam1FinalScore(){
-//        String score = getTeam1Score();
-//        String wickets = getTeam1Wickets();
-//        System.out.println("-------------------------------------"+ score +"--------"+wickets);
-//        if(score != null){
-//            return score+"/"+wickets;
-//        }
-//        return "empty";
-//    }
 
     public String getTeam2Over() {
         String OverTeam2Over = team2Over;

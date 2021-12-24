@@ -1,7 +1,6 @@
 package com.knoldus.kup.ipl.IPL_Management_System.controllers;
 
 import com.knoldus.kup.ipl.IPL_Management_System.models.*;
-import com.knoldus.kup.ipl.IPL_Management_System.repository.*;
 import com.knoldus.kup.ipl.IPL_Management_System.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -64,7 +63,6 @@ public class ResultController {
 
         Match match = matchService.getMatchById(match_id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid match Id:" + match_id));
-        System.out.println("result edit method"+match.getTeam1().getName());
 
         model.addAttribute("match",match);
 
@@ -81,7 +79,6 @@ public class ResultController {
 
     @PostMapping("/add/{id}")
     public String ScoreSave(@PathVariable("id") long id, Match match, Model model, RedirectAttributes redirectAttributes){
-        System.out.println("add result method---------------------------------"+match.getTeam1Over());
         resultService.getResult(match);
         pointService.addPointTable(match);
         redirectAttributes.addFlashAttribute("message", "Score added successfully");
@@ -92,7 +89,6 @@ public class ResultController {
 
     @PostMapping("/update/{id}")
     public String ScoreUpdate(@PathVariable("id") long id, Match match, Model model, RedirectAttributes redirectAttributes){
-        System.out.println("result update method---------------------------------"+match.getTeam1Over());
         updateResultService.updatePointTable(match);
         redirectAttributes.addFlashAttribute("message", "Score updated successfully");
         redirectAttributes.addFlashAttribute("messageType", "score");

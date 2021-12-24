@@ -38,7 +38,6 @@ public class TeamService {
         return teamRepository.findAll();
     }
 
-
     public void deleteTeam(Long id){
         teamRepository.delete(this.getTeamById(id).get());
     }

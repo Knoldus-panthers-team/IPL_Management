@@ -1,8 +1,7 @@
 package com.knoldus.kup.ipl.IPL_Management_System.models;
 
-import javax.management.StandardEmitterMBean;
 import javax.persistence.*;
-import java.util.Set;
+
 
 @Entity
 @Table(name = "states")
@@ -15,6 +14,14 @@ public class State {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "country_id")
     private Country country;
+
+    public State() {
+    }
+
+    public State(Long id, String stateName) {
+        this.id=id;
+        this.stateName=stateName;
+    }
 
 
     public String getStateName() {
