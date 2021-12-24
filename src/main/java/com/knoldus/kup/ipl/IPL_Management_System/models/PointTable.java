@@ -18,38 +18,57 @@ public class PointTable implements Comparable<PointTable>{
     int win;
     int lose;
     int points;
+
+    public PointTable(Long id, int totalMatch, Team team, int win, int lose, int points, double netRunRate) {
+        this.id = id;
+        this.totalMatch = totalMatch;
+        this.team = team;
+        this.win = win;
+        this.lose = lose;
+        this.points = points;
+        this.netRunRate = netRunRate;
+    }
+
     double netRunRate;
+
+    public PointTable() {
+
+    }
 
     public int getTotalMatch() {
         return totalMatch;
     }
 
-    public void setTotalMatch(int totalMatch) {
+    public int setTotalMatch(int totalMatch) {
         this.totalMatch = totalMatch;
+        return totalMatch;
     }
 
     public int getWin() {
         return win;
     }
 
-    public void setWin(int win) {
+    public int setWin(int win) {
         this.win = win;
+        return win;
     }
 
     public int getLose() {
         return lose;
     }
 
-    public void setLose(int lose) {
+    public int setLose(int lose) {
         this.lose = lose;
+        return lose;
     }
 
     public int getPoints() {
         return points;
     }
 
-    public void setPoints(int points) {
+    public double setPoints(int points) {
         this.points = points;
+        return 0;
     }
 
     public double getNetRunRate() {
