@@ -1,7 +1,6 @@
 package com.knoldus.kup.ipl.IPL_Management_System.models;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -40,8 +39,9 @@ public class Country {
         return countryName;
     }
 
-    public void setCountryName(String countryName) {
+    public String setCountryName(String countryName) {
         this.countryName = countryName;
+        return countryName;
     }
 
     public Set<State> getStates() {

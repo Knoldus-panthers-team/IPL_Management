@@ -16,6 +16,14 @@ public class State {
     @JoinColumn(name = "country_id")
     private Country country;
 
+    public State() {
+    }
+
+    public State(Long id, String stateName) {
+        this.id=id;
+        this.stateName=stateName;
+    }
+
 
     public String getStateName() {
         return stateName;

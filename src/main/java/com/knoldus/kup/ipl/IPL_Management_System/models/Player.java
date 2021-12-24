@@ -42,21 +42,21 @@ public class Player {
         return id;
     }
 
-    public void setId(Long id) {
+    public Long setId(Long id) {
         this.id = id;
+        return id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public String setName(String name) {
         this.name = name;
+        return name;
     }
 
-    public Team getTeam() {
-        return team;
-    }
+    public Team getTeam() {return team;}
 
     public void setTeam(Team team) {
         this.team = team;
@@ -70,11 +70,10 @@ public class Player {
         this.country = country;
     }
 
-    public String getRole() {
-        return role;
-    }
+    public String getRole() {return role;}
 
-    public void setRole(String role) {
+    public String setRole(String role) {
         this.role = role;
+        return role;
     }
 }
