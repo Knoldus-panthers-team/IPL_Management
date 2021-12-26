@@ -19,8 +19,8 @@ class CountryTest {
     @BeforeEach
     void setUp(){
         country=new Country(1L,"India");
-        states.add( new State(1L,"kolkata"));
-        states.add( new State(2L,"Mumbai"));
+        states.add( new State(1L,"kolkata", country));
+        states.add( new State(2L,"Mumbai", country));
         country.setStates(states);
 
         players.add(new Player(1L,"Rohit",team,country,"Batsman"));
@@ -69,8 +69,8 @@ class CountryTest {
 
     @Test
     void setStates() {
-        states.add( new State(2L,"Chennai"));
-        states.add( new State(3L,"Delhi"));
+        states.add( new State(2L,"Chennai", country));
+        states.add( new State(3L,"Delhi", country));
         Set<State> list=country.getStates();
         int size=list.size();
         assertTrue(size>1);

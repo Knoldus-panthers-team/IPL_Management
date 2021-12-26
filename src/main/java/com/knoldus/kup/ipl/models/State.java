@@ -1,8 +1,6 @@
 package com.knoldus.kup.ipl.models;
 
 import javax.persistence.*;
-
-
 @Entity
 @Table(name = "states")
 public class State {
@@ -15,14 +13,14 @@ public class State {
     @JoinColumn(name = "country_id")
     private Country country;
 
+    public State(Long id, String stateName, Country country) {
+        this.id = id;
+        this.stateName = stateName;
+        this.country = country;
+    }
+
     public State() {
     }
-
-    public State(Long id, String stateName) {
-        this.id=id;
-        this.stateName=stateName;
-    }
-
 
     public String getStateName() {
         return stateName;
