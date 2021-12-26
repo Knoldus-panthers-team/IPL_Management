@@ -1,10 +1,10 @@
-//package com.knoldus.kup.ipl.IPL_Management_System.controllers;
+//package com.knoldus.kup.ipl.controllers;
 //
-//import com.knoldus.kup.ipl.IPL_Management_System.models.City;
-//import com.knoldus.kup.ipl.IPL_Management_System.models.Country;
-//import com.knoldus.kup.ipl.IPL_Management_System.models.Player;
-//import com.knoldus.kup.ipl.IPL_Management_System.models.Team;
-//import com.knoldus.kup.ipl.IPL_Management_System.services.PlayerService;
+//import com.knoldus.kup.ipl.models.City;
+//import com.knoldus.kup.ipl.models.Country;
+//import com.knoldus.kup.ipl.models.Player;
+//import com.knoldus.kup.ipl.models.Team;
+//import com.knoldus.kup.ipl.services.PlayerService;
 //import org.junit.Before;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
@@ -60,9 +60,16 @@
 //    void addPlayer() {
 //    }
 //
-//    @Test
-//    void showUpdateForm() {
-//    }
+////    @Test
+////    void showUpdateForm() {
+////        given(studentService.findByStudentNumber(ragcrixStudentNumber)).willReturn(ragcrix);
+////
+////        mvc.perform(get("/students/byStudentNumber/{studentNumber}", ragcrixStudentNumber)
+////                        .contentType(MediaType.APPLICATION_JSON))
+////                .andExpect(status().isOk())
+////                .andExpect(jsonPath("$.name", is(ragcrix.getName())));
+////    }
+////    }
 //
 //    @Test
 //    void updatePlayer() {
