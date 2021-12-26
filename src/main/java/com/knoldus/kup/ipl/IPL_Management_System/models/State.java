@@ -1,8 +1,6 @@
 package com.knoldus.kup.ipl.IPL_Management_System.models;
 
-import javax.management.StandardEmitterMBean;
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "states")
@@ -16,6 +14,11 @@ public class State {
     @JoinColumn(name = "country_id")
     private Country country;
 
+    public State(Long id, String stateName, Country country) {
+        this.id = id;
+        this.stateName = stateName;
+        this.country = country;
+    }
 
     public String getStateName() {
         return stateName;
@@ -24,8 +27,6 @@ public class State {
     public void setStateName(String stateName) {
         this.stateName = stateName;
     }
-
-
 
     public Country getCountry() {
         return country;
