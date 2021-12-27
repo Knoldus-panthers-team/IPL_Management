@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Match</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body class="bg-secondary">
+    <div class="container">
+    <!-- row -->
+        <div class="row">
+            <div class="2"></div>
+            <div class="col-md-6" th:each ="matchObj:${matches}">
+                <div class="card text-white bg-dark mb-2">
+                    <div class="row no-gutters align-items-center">
+<!--                        <div class="col-md-4">-->
+<!--                            <img src="https://source.unsplash.com/random/600x800" class="card-img" alt="...">-->
+<!--                        </div>-->
+                        <div class="col-md-12">
+                            <div class="card-body">
+                                <p class="card-title text-secondary">T20 55 of 60</p>
+                                <p class="card-text" th:text="${matchObj.team1.name}"></p>
+                                <p class="card-text" th:text="${matchObj.team2.name}"></p>
+                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="2"></div>
+        </div>
+    </div>
+        <!-- row -->
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <title>Update Result</title>
+    <style>
+        body {
+            background-image: url("/images/ground3.jpg");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+        }
+
+        .panel-bg {
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <nav class="navbar navbar-dark d-flex justify-content-center" style="background-color:#223577">
+        <div class="container">
+            <div class="mt-3 row">
+                <h4 class="text-light">Indian Premier League</h4>
+                </p>
+            </div>
+        </div>
+        <ul class="nav nav-tabs d-flex justify-content-center" id="myTab" role="tablist">
+        </ul>
+    </nav>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8 panel-bg card">
+            <div class="card-body">
+                <h1 class="d-flex justify-content-center text-primary fw-bold">Update Result</h1>
+                <form method="post" action="#" th:action="@{/result/update/{id}(id=${match.id})}" th:object="${match}">
+                    <!-- 2 column grid layout with text inputs for the first and last names -->
+                    <p class="text text-danger" id="errorMessage"></p>
+                    <div class="row mb-2" hidden>
+                        <div class="col">
+                            <div class="form-outline">
+                                <label class="form-label" for="form3Example1">Date</label>
+                                <input type="hidden" th:field="*{matchDate}" id="form3Example1"
+                                       class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <!--            <div class="card-header font-weight-bold">[[${match.team1.name}]]</div>-->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="toss" class="form-label font-weight-bold">Toss Winner</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend" style="height:38px;">
+                                                <span class="input-group-text"><img src="/images/toss3.jpg"
+                                                                                    style="border-radius: 50%;" class="img-rounded" alt="score"
+                                                                                    width="35" height="35">
+                                                </span>
+                                        </div>
+                                        <select th:field="*{tossWinnerTeam}" class="custom-select" id="toss"
+                                                style="border-radius: 5px;">
+                                            <option th:value="${match.team1.id}" th:text="${match.team1.name}"
+                                                    class="form-control"></option>
+                                            <option th:value="${match.team2.id}" th:text="${match.team2.name}"
+                                                    class="form-control"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label for="choice" class="form-label font-weight-bold">Choose to</label>
+                                    <select th:field="*{tossChoice}" class="custom-select" id="choice">
+                                        <option th:value="batting" class="form-control"
+                                                style="background-image:url('/images/bg2.jpg');">
+                                            Batting
+                                        </option>
+                                        <option th:value="bowling" class="form-control">
+                                            Bowling
+                                            <img src="/images/bowling.png" class="img-rounded" alt="score"
+                                                 width="30" height="40">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--------------------------------- Team -1  ------------------------------->
+                    <div class="card mb-2 mt-2">
+                        <div class="card-header">
+                            <h4>[[${match.team1.name}]]</h4>
+                        </div>
+                        <div class="card-body">
+                            <!--------------------------------- Score ------------------------------->
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="team1Score" class="form-label font-weight-bold"> Score</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend" style="height:38px;">
+                                                <span class="input-group-text"><img src="/images/score.png"
+                                                                                    class="img-rounded" alt="score" width="30" height="35">
+                                                </span>
+                                        </div>
+                                        <input type="text" class="form-control" style="border-radius: 5px;"
+                                               th:field="*{team1Score}" onchange="validateTeam1Score()" id="team1Score"
+                                               aria-describedby="role">
+                                        <span id="spnError" style="color: Red; display: none">*Enter valid
+                                                score.</span>
+                                        <p class="text text-danger" id="player_namemsg"></p>
+                                    </div>
+                                </div>
+
+                                <!--------------------------------- Wickets ------------------------------->
+                                <div class="col-6">
+                                    <label class="form-label font-weight-bold">Wickets</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend" style="height:38px;">
+                                                <span class="input-group-text">
+                                                    <img src="/images/wickets2.png" class="img-rounded" alt="wickets"
+                                                         width="20" height="35">
+                                                </span>
+                                        </div>
+                                        <select th:field="*{team1Wickets}" class="custom-select"
+                                                style="border-radius: 5px;">
+                                            <option th:value="0" th:text="0"></option>
+                                            <option th:value="1" th:text="1"></option>
+                                            <option th:value="2" th:text="2"></option>
+                                            <option th:value="3" th:text="3"></option>
+                                            <option th:value="4" th:text="4"></option>
+                                            <option th:value="5" th:text="5"></option>
+                                            <option th:value="6" th:text="6"></option>
+                                            <option th:value="7" th:text="7"></option>
+                                            <option th:value="8" th:text="8"></option>
+                                            <option th:value="9" th:text="9"></option>
+                                            <option th:value="10" th:text="10"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-outline">
+                                        <label class="form-label font-weight-bold" for="team1Over">Overs</label>
+                                        <input type="text" th:field="*{team1Over}" onchange="ValidateOver1()"
+                                               id="team1Over" class="form-control" />
+                                        <span id="spnError3" style="color: Red; display: none">*Enter valid
+                                                overs.</span>
+                                        <p class="text text-danger" id="player_namemsg3"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--------------------------------- Team-2 ------------------------------->
+                    <!--------------------------------- Score ------------------------------->
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <h4>[[${match.team2.name}]]</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="team2Score" class="form-label font-weight-bold"> Score</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend" style="height:38px;">
+                                                <span class="input-group-text"><img src="/images/score.png"
+                                                                                    class="img-rounded" alt="score" width="30" height="35">
+                                                </span>
+                                        </div>
+                                        <input type="text" style="border-radius: 5px;" class="form-control"
+                                               th:field="*{team2Score}" onchange="validateTeam2Score()" id="team2Score"
+                                               aria-describedby="role">
+                                        <span id="spnError2" style="color: Red; display: none">*Enter valid
+                                                score.</span>
+                                        <p class="text text-danger" id="player_namemsg2"></p>
+                                    </div>
+                                </div>
+                                <!--------------------------------- Wickets ------------------------------->
+                                <div class="col-6">
+                                    <label class="form-label font-weight-bold">Wickets</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend" style="height:38px;">
+                                                <span class="input-group-text">
+                                                    <img src="/images/wickets2.png" class="img-rounded" alt="wickets"
+                                                         width="20" height="35">
+                                                </span>
+                                        </div>
+                                        <select th:field="*{team2Wickets}" class="custom-select"
+                                                style="border-radius: 5px;">
+                                            <option th:value="0" th:text="0"></option>
+                                            <option th:value="1" th:text="1"></option>
+                                            <option th:value="2" th:text="2"></option>
+                                            <option th:value="3" th:text="3"></option>
+                                            <option th:value="4" th:text="4"></option>
+                                            <option th:value="5" th:text="5"></option>
+                                            <option th:value="6" th:text="6"></option>
+                                            <option th:value="7" th:text="7"></option>
+                                            <option th:value="8" th:text="8"></option>
+                                            <option th:value="9" th:text="9"></option>
+                                            <option th:value="10" th:text="10"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--------------------------------- Overs ------------------------------->
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-outline">
+                                        <label class="form-label font-weight-bold" for="team2Over">Overs</label>
+                                        <input type="text" th:field="*{team2Over}" onchange="ValidateOver2()"
+                                               id="team2Over" class="form-control" />
+                                        <span id="spnError4" style="color: Red; display: none">*Enter valid
+                                                overs.</span>
+                                        <p class="text text-danger" id="player_namemsg4"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3" hidden>
+                        <label for="role" class="form-label">Venue</label>
+                        <select th:field="*{venue}" class="custom-select">
+                            <div th:each="venue:${venues}">
+                                <option th:value="${venue.id}" th:text="${venue.name}" class="form-control">
+                                </option>
+                            </div>
+                        </select>
+                    </div>
+
+                    <div class="mb-3" hidden>
+                        <label for="" class="form-label">Team-1</label>
+                        <select th:field="*{team1}" class="custom-select">
+                            <div th:each="team:${teams}">
+                                <option th:value="${team.id}" th:text="${team.name}"></option>
+                            </div>
+                        </select>
+                    </div>
+                    <div class="mb-3" hidden>
+                        <label for=class="form-label">Team-2</label>
+                        <select th:field="*{team2}" class="custom-select">
+                            <div th:each="team:${teams}">
+                                <option th:value="${team.id}" th:text="${team.name}"></option>
+                            </div>
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" id="btnSubmit" onclick="btnSubmit1()"
+                                class="btn btn-primary text-center">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>-->
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script>
+    function validateTeam1Score() {
+        var isValid = false;
+        var regex = /^\d+$/;
+        isValid = regex.test(document.getElementById("team1Score").value);
+        document.getElementById("spnError").style.display = !isValid ? "block" : "none";
+        console.log(isValid);
+        if (!isValid) {
+            console.log("isValid");
+            $("#team1Score").css('border-color', 'red');
+            document.getElementById("btnSubmit").disabled = true;
+            return isValid;
+        } else {
+            $("#team1Score").css('border-color', '');
+            document.getElementById("btnSubmit").disabled = false;
+        }
+        return isValid;
+    }
+    function validateTeam2Score() {
+        var isValid = false;
+        var regex = /^\d+$/;
+< !--        // /^[0-9]*$/;-->
+            isValid = regex.test(document.getElementById("team2Score").value);
+        document.getElementById("spnError2").style.display = !isValid ? "block" : "none";
+        if (!isValid) {
+            $("#team2Score").css('border-color', 'red');
+            document.getElementById("btnSubmit").disabled = true;
+            return isValid;
+        } else {
+            $("#team2Score").css('border-color', '');
+            document.getElementById("btnSubmit").disabled = false;
+        }
+        return isValid;
+    }
+
+
+< !--    ------------------------------Validate overs----------------------------->
+
+        function validateRuns1() {
+            var team1Over = $('#team1Over').val();
+            var overArr = team1Over.split(".");
+            var team1runs = $('#team1Score').val();
+            var totalRuns = ((overArr[0] * 6) + parseInt(overArr[1])) * 6;
+            console.log("total run1 :", totalRuns, "overs: ", overArr[0], "balls: ", overArr[1]);
+            var runs = overArr;
+            if (team1runs > totalRuns) {
+                console.log("Please enter valid score for team1");
+                $("#player_namemsg3").html("Please enter valid score for team1");
+< !--alert("Please enter valid score"); -->
+                    $("#team1Score").css('border-color', 'red');
+                document.getElementById("btnSubmit").disabled = true;
+                return false;
+            }
+            else {
+                $("#player_namemsg").html("");
+                $("#team1Score").css('border-color', '');
+                document.getElementById("btnSubmit").disabled = false;
+            }
+            return true;
+        }
+
+    function validateRuns2() {
+        var team2Over = $('#team2Over').val();
+        var overArr = team2Over.split(".");
+        var team2runs = $('#team2Score').val();
+        var totalRuns = ((overArr[0] * 6) + parseInt(overArr[1])) * 6;
+        console.log("total :", totalRuns, "overs: ", overArr[0], "balls: ", overArr[1]);
+        var runs = overArr;
+        console.log("Prrrr");
+        if (team2runs > totalRuns) {
+            console.log("Please enter valid score for team1");
+            $("#player_namemsg3").html("Please enter valid score for team1");
+            alert("Please enter valid score");
+            $("#team2Score").css('border-color', 'red');
+            document.getElementById("btnSubmit").disabled = true;
+            return false;
+        }
+        else {
+            $("#player_namemsg2").html("");
+            $("#team2Score").css('border-color', '');
+            document.getElementById("btnSubmit").disabled = false;
+        }
+        return true;
+    }
+    function ValidateOver1() {
+        var isValid = false;
+        var regex = /^\d+(\.[1-5])?$/;
+        isValid = regex.test(document.getElementById("team1Over").value);
+        document.getElementById("spnError3").style.display = !isValid ? "block" : "none";
+        over = $("#team1Over").val();
+        console.log("hello-1 : ", over);
+        console.log(isValid);
+        if (over > 20) {
+            $("#player_namemsg3").html("Overs can not be more than 20");
+            $("#team1Over").css('border-color', 'red');
+            document.getElementById("btnSubmit").disabled = true;
+            return false;
+        } else if (!isValid) {
+            $("#team1Over").css('border-color', 'red');
+            document.getElementById("btnSubmit").disabled = true;
+            return false;
+        }
+        else {
+            document.getElementById("btnSubmit").disabled = false;
+            $("#player_namemsg3").html("");
+            $("#team1Over").css('border-color', '');
+        }
+        validateRuns1();
+        console.log(isValid);
+        return isValid;
+    }
+    function ValidateOver2() {
+        var isValid = false;
+        var regex = /^\d+(\.[1-5])?$/;
+        isValid = regex.test(document.getElementById("team2Over").value);
+        document.getElementById("spnError4").style.display = !isValid ? "block" : "none";
+        over = $("#team2Over").val();
+        if (over > 20) {
+            document.getElementById("btnSubmit").disabled = true;
+            $("#player_namemsg4").html("Overs can not be more than 20");
+            $("#team2Over").css('border-color', 'red');
+            return false;
+        }
+        else if (!isValid) {
+            $("#team2Over").css('border-color', 'red');
+            document.getElementById("btnSubmit").disabled = true;
+            return false;
+        }
+        else {
+            document.getElementById("btnSubmit").disabled = false;
+            $("#player_namemsg4").html("");
+            $("#team2Over").css('border-color', '');
+        }
+        validateRuns2();
+        return isValid;
+    }
+
+    function btnSubmit1() {
+        if (!validateTeam1Score() || !ValidateOver1() || !validateTeam2Score() || !ValidateOver2()) {
+            console.log("It is working");
+            document.getElementById("btnSubmit").disabled = true;
+            $("#errorMessage").html("Please fill all the fields");
+        }
+    }
+</script>
+</body>
+</html>

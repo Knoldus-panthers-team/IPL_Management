@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form th:action="@{/suggest-event}"  method="post">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <div th:switch="${message}">
+        <div th:case="'Success'" class="alert alert-success">
+            <strong>Success!</strong> Operation performed successfully.
+        </div>
+        <div th:case="'Failed'" class="alert alert-danger">
+            <strong>Failure!</strong> Operation failed. Please try again
+        </div>
+    </div>
+</body>
+</html>
+
+

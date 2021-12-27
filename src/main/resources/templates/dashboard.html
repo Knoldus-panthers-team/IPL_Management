@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <title>IPL Admin</title>
+    <link rel="stylesheet" href="/css/indexStyle.css">
+    <style>
+        nav ul {
+        list-style-type: none;
+        display: flex;
+        justify-content: space-between;
+        width: 70%; }
+        body {
+            background-image: url("/images/ground6.jpg");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+        }
+        table {
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0.9;
+        }
+        .crd{
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0.9;
+            background-color:#050505
+        }
+    </style>
+  <title>IPL</title>
+</head>
+<body>
+
+<div>
+  <nav class="navbar navbar-dark d-flex justify-content-center navbar-fixed-top" style="background-color:#223577">
+    <div class="container"><div class="mt-3 row"><h4 class="text-light">Indian Premier League</h4></p></div></div>
+    <ul class="nav nav-tabs d-flex justify-content-center" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link text-light" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">PLAYERS</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link text-light" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">MATCHES</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active text-light" id="table-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="false">TABLE</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link text-light" id="teams-tab" data-bs-toggle="tab" data-bs-target="#teams" type="button" role="tab" aria-controls="teams" aria-selected="false">TEAMS</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link text-light" id="news-tab" data-bs-toggle="tab" data-bs-target="#news" type="button" role="tab" aria-controls="news" aria-selected="false">NEWS</button>
+      </li>
+
+    </ul>
+  </nav>
+</div>
+
+<div class="container">
+  <div class="tab-content" id="myTabContent">
+<!--    Players  table-->
+    <div class="tab-pane fade show" id="home" role="tabpanel" aria-labelledby="home-tab">
+      <div class=" d-flex justify-content-center">
+      </div>
+<!--      Players table-->
+      <table class="table table-dark table-hover">
+        <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Role</th>
+          <th scope="col">Team</th>
+          <th scope="col">Country</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each ="ply:${players}">
+          <td></td>
+          <td th:text ="${ply.name}"></td>
+          <td th:text ="${ply.role}"></td>
+            <td><a class="text-warning font-weight-bold" th:href="@{/teams/players/{id}(id=${ply.team.id})}">[[${ply.team.name}]]</a></td>
+            <td th:text ="${ply.country.countryName}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+      <!--      Teams point table-->
+    <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+      <div class=" d-flex justify-content-center">
+      </div>
+        <table class="table table-dark table-hover">
+        <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Team</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col">M</th>
+          <th scope="col">W</th>
+          <th scope="col">L</th>
+          <th scope="col">NRR</th>
+          <th scope="col">Pts</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each ="pointTable:${pointTables}">
+            <td></td>
+            <td class="font-weight-bold"><a th:href="@{/teams/players/{team_id}(team_id=${pointTable.team.id})}" class="text-warning a1">[[${pointTable.team.name}]]</a></td>
+          <td></td>
+          <td></td>
+          <td th:text ="${pointTable.totalMatch}"></td>
+          <td th:text ="${pointTable.win}"></td>
+            <td th:text ="${pointTable.lose}"></td>
+            <td th:text ="${pointTable.netRunRate}"></td>
+            <td th:text ="${pointTable.points}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!--      Matches card -->
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+<!--      <div class="container ">-->
+        <!-- row -->
+        <div class="row">
+          <div class="2"></div>
+          <div class="col-md-6" th:each ="match:${matches}" style="max-width: 50rem;">
+            <div class="card text-white mb-2 crd">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card-body ">
+                    <div class="row">
+                      <div class="col-md-7">
+                        <p class="card-title text-secondary">T20 Match [[${match.id}]]</p>
+                          <p class="card-text text-warning font-weight-bold">
+                              <a th:href="@{/teams/players/{id}(id=${match.team1.id})}">[[${match.team1.name}]]</a></p>
+                          <p class="card-text text-warning font-weight-bold">
+                              <a th:href="@{/teams/players/{id}(id=${match.team2.id})}">[[${match.team2.name}]]</a></p>
+                        <p class="card-text"><small class="text-white" th:text="${match.result}"></small></p>
+                      </div>
+                      <div class="col-md-5">
+                        <small><p class="text-secondary" th:text="${match.matchDate}"></p></small>
+                        <p class="text-white">[[${match.team1FinalScore}]] ([[${match.team1Over}]])</p>
+                          <p class="text-white">[[${match.team2FinalScore}]] ([[${match.team2Over}]])</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="2"></div>
+        </div>
+<!--      </div>-->
+    </div>
+
+    <!----------------------        Teams table ----------------->
+    <div class="tab-pane fade" id="teams" role="tabpanel" aria-labelledby="contact-tab">
+      <div class="d-flex justify-content-center">
+      </div>
+      <table class="table table-dark table-hover">
+        <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">City</th>
+<!--          <th colspan="2">&emsp; &emsp; &emsp;Action</th>-->
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each ="team:${teams}">
+          <td></td>
+          <td><a class="text-warning font-weight-bold" th:href="@{/teams/players/{team_id}(team_id=${team.id})}">[[${team.name}]]</a></td>
+<!--          <td th:text ="${team.name}"></td>-->
+          <td th:text ="${team.city.cityName}"></td>
+<!--          <td><a th:href="@{/teams/edit/{id}(id=${team.id})}">View</a></td>-->
+<!--          <td><a th:href="@{/teams/delete/{id}(id=${team.id})}">Delete</a></td>-->
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+</body>
+</html>
