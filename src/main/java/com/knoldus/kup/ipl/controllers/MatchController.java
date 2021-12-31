@@ -36,25 +36,18 @@ public class MatchController {
     @Autowired
     private MatchService matchService;
 
-    @RequestMapping("/addMatch")
-    public String getAddForm(Model model){
-        List<Venue> venues= venueService.getAllVenues();
-        List<Team> teams = teamService.getAllTeams();
-        model.addAttribute("teams",teams);
-        model.addAttribute("venues",venues);
-        model.addAttribute("match",matchService.getNewMatch());
-        return "add-match";
-    }
+//    @RequestMapping("/addMatch")
+//    public String getAddForm(Model model){
+//        matchService.getMatchDetails(model);
+//        return "add-match";
+//    }
 
     @PostMapping("/save")
     public String saveMatch(final @Valid Match match, BindingResult bindingResult, RedirectAttributes redirectAttributes){
         if (bindingResult.hasErrors()){
             return "add-match";
         }
-        matchService.saveMatch(match);
-        redirectAttributes.addFlashAttribute("message", "Match scheduled successfully");
-        redirectAttributes.addFlashAttribute("messageType", "match");
-        redirectAttributes.addFlashAttribute("alertType", "success");
+        matchService.getAlertOnSave(redirectAttributes, match);
         return "redirect:/ipl/admin";
     }
 

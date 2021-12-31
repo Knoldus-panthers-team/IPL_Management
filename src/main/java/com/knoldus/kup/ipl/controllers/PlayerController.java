@@ -32,34 +32,17 @@ public class PlayerController {
     @Autowired
     CountryService countryService;
 
-    @GetMapping("/addForm")
-    public String addForm(Model model){
-        model.addAttribute("player", playerService.getNewPlayerObject());
-        return "add-player";
-    }
+//    @GetMapping("/addForm")
+//    public String addForm(Model model){
+//        model.addAttribute("player", playerService.getNewPlayerObject());
+//        return "add-player";
+//    }
 
     @PostMapping("/add")
     public String addPlayer(@Valid Player player, BindingResult bindingResult, RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors())
         { return "addPlayer"; }
-        else {
-            if(teamService.getByName(player.getTeam().getName()).isPresent()) {
-                Team team = teamService.getByName(player.getTeam().getName())
-                        .orElseThrow(()->new IllegalArgumentException
-                                ("Invalid player name: "+player.getTeam().getName()));
-                if (team.getPlayers().size() < 3) {
-                    playerService.savePlayer(player);
-                    redirectAttributes.addFlashAttribute("message", "Player added successfully");
-                    redirectAttributes.addFlashAttribute("messageType", "player");
-                    redirectAttributes.addFlashAttribute("alertType", "success");
-                    System.out.println(team.getPlayers().size());
-                } else {
-                    redirectAttributes.addFlashAttribute("message", "Players can not be more than 15");
-                    redirectAttributes.addFlashAttribute("messageType", "player");
-                    redirectAttributes.addFlashAttribute("alertType", "error");
-                }
-            }
-        }
+        else { playerService.getSuccessAlertOnSave(player,redirectAttributes); }
         return "redirect:/ipl/admin";
     }
 

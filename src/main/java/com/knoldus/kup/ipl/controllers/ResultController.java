@@ -20,31 +20,39 @@ import java.util.List;
 public class ResultController {
 
     @Autowired
-    MatchService matchService;
+    private MatchService matchService;
 
     @Autowired
-    VenueService venueService;
+    private VenueService venueService;
 
     @Autowired
-    TeamService teamService;
+    private TeamService teamService;
 
     @Autowired
-    ResultService resultService;
+    private ResultService resultService;
 
     @Autowired
-    UpdateResultService updateResultService;
+    private UpdateResultService updateResultService;
 
     @Autowired
-    PointService pointService;
+    private PointService pointService;
 
+    @Autowired
+    private ProducerService kafkaService;
+
+    /**
+     * @param match_id
+     * @param model
+     * @return
+     */
     @GetMapping("/addScore/{match_id}")
     public String showAddForm(@PathVariable ("match_id") long match_id, Model model) {
 
         Match match = matchService.getMatchById(match_id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid match Id:" + match_id));
-        System.out.println("result add method"+match.getTeam1().getName()+match.getTeam1Over().equals("Yet to be played"));
+        System.out.println("result add method" + match.getTeam1().getName()+match.getTeam1Over().equals("Yet to be played"));
 
-        if (match.getTeam1Over().equals("Yet to be played")){
+        if (match.getTeam1Over().equals("Yet to be played")) {
             match.setTeam1Over("");
             match.setTeam2Over("");
         }
@@ -60,6 +68,12 @@ public class ResultController {
         return "add-result";
     }
 
+    /**
+     *
+     * @param match_id
+     * @param model
+     * @return
+     */
     @GetMapping("/editScore/{match_id}")
     public String showUpdateForm(@PathVariable ("match_id") long match_id, Model model) {
 
@@ -83,6 +97,7 @@ public class ResultController {
     public String ScoreSave(@PathVariable("id") long id, Match match, Model model, RedirectAttributes redirectAttributes){
         resultService.getResult(match);
         pointService.addPointTable(match);
+        kafkaService.sendMatch(match);
         redirectAttributes.addFlashAttribute("message", "Score added successfully");
         redirectAttributes.addFlashAttribute("messageType", "score");
         redirectAttributes.addFlashAttribute("alertType", "success");
@@ -92,6 +107,7 @@ public class ResultController {
     @PostMapping("/update/{id}")
     public String ScoreUpdate(@PathVariable("id") long id, Match match, Model model, RedirectAttributes redirectAttributes){
         updateResultService.updatePointTable(match);
+        kafkaService.sendMatch(match);
         redirectAttributes.addFlashAttribute("message", "Score updated successfully");
         redirectAttributes.addFlashAttribute("messageType", "score");
         redirectAttributes.addFlashAttribute("alertType", "success");

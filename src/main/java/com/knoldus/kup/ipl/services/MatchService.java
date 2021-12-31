@@ -6,6 +6,8 @@ import com.knoldus.kup.ipl.repository.TeamRepository;
 import com.knoldus.kup.ipl.repository.VenueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +61,6 @@ public class MatchService {
         List<Match>  dbMatches = matches.stream().filter(matchVenue -> matchVenue.getVenue().getId()
                 .equals(selectedVenueId)).filter(match1 -> match1.getMatchDate()
                 .split("\\s")[0].equals(dateArr[0])).collect(Collectors.toList());
-
         if(dbMatches.size()>=1){
             if(dbMatches.get(0).getId().equals(match.getId()))
                 return false;
@@ -72,5 +73,25 @@ public class MatchService {
             return true;
         }
         return false;
+    }
+
+//    public Model getMatchDetails(Model model){
+//        model.addAttribute("teams", teamRepository.findAll());
+//        model.addAttribute("venues",venueRepository.findAll());
+//        model.addAttribute("match",this.getNewMatch());
+//        return model;
+//    }
+    
+    public RedirectAttributes getAlertOnSave(RedirectAttributes redirectAttributes, Match match){
+        matchRepository.save(match);
+        this.getSuccessMessage(redirectAttributes);
+        redirectAttributes.addFlashAttribute("alertType", "success");
+        return redirectAttributes;
+    }
+    
+    public RedirectAttributes getSuccessMessage(RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("message", "Match scheduled successfully");
+        redirectAttributes.addFlashAttribute("messageType", "match");
+        return redirectAttributes;
     }
 }

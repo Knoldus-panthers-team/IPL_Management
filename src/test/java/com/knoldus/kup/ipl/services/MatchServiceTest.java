@@ -8,11 +8,16 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.ui.ExtendedModelMap;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -31,6 +36,8 @@ class MatchServiceTest {
     Match match1,match2,match3;
 
     List<Match> matchesList;
+    RedirectAttributes redirectAttributes;
+    
     @BeforeEach
     void setUp(){
         Country country = new Country(1L,"India");
@@ -44,6 +51,7 @@ class MatchServiceTest {
         match3 = new Match(3L,"4/05/2021",venue,team1,team2);
         matchesList = Arrays.asList(match1,match2,match3);
         Mockito.when(matchRepository.findAll()).thenReturn(matchesList);
+        redirectAttributes = new RedirectAttributesModelMap();
     }
 
     @Test
@@ -63,7 +71,7 @@ class MatchServiceTest {
     @Test
     void getAllMatches_ReturnTrueIfFoundListIsGreaterThan2() {
         int actualSize = matchService.getAllMatches().size();
-        Assertions.assertThat(matchService.getAllMatches()).isEqualTo(matchesList);
+        assertThat(matchService.getAllMatches()).isEqualTo(matchesList);
         assertTrue(actualSize > 2);
     }
 
@@ -87,6 +95,12 @@ class MatchServiceTest {
         boolean isBooked = matchService.isSlotBooked(match);
         assertTrue(!isBooked);
     }
+    
+    @Test
+    void isSlotBooked_ReturnFalseIfSlotBookedForExistingMatch() {
+        boolean isBooked = matchService.isSlotBooked(match1);
+        assertTrue(!isBooked);
+    }
 
     @Test
     void isTeamSame_ReturnTrueIfBothTeamSame() {
@@ -107,5 +121,16 @@ class MatchServiceTest {
         Match match = matchService.getNewMatch();
         Match expected = new Match();
         System.out.println(expected.getClass());
+    }
+    
+    @Test
+    void getAlertOnSave_ReturnModelWithMessage(){
+        Mockito.when(matchRepository.save(match1)).thenReturn(match1);
+        RedirectAttributes actualAttributes = matchService.getAlertOnSave(redirectAttributes,match1);
+        RedirectAttributes expectedAttributes = new RedirectAttributesModelMap();
+        expectedAttributes.addFlashAttribute("message", "Match scheduled successfully");
+        expectedAttributes.addFlashAttribute("messageType", "match");
+        expectedAttributes.addFlashAttribute("alertType", "success");
+        assertThat(actualAttributes).isEqualTo(redirectAttributes);
     }
 }

@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+
+<ruleset
+        name="All Java Rules"
+        xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+    <description>Every Java Rule in PMD</description>
+
+
+    <!-- Lexer test cases - wrong encoding, illegal characters, ... -->
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management_System (1)/IPL_Management_System/src/main/java/com/knoldus/kup/ipl/IplManagementSystemApplication.java</exclude-pattern>
+
+
+    <!-- the following files produce parsing errors with java 9, as they use identifiers, that
+         are now reserved keywords and are forbidden to be used as identifiers.
+
+             For Controller Class -->
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management_System (1)/IPL_Management_System/src/main/java/com/knoldus/kup/ipl/controllers/IPLController.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/controllers/MatchController.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/controllers/PlayerController.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/controllers/PointController.java/</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/controllers/ResultController.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/controllers/ScoreBoardController.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/controllers/TeamController.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/controllers/TestController.java</exclude-pattern>
+    <!--    for Repository   -->
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/repository/CityRepository.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/repository/CountryRepository.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/repository/MatchRepository.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/repository/PlayerRepository.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/repository/PointRepository.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/repository/TeamRepository.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/repository/VenueRepository.java</exclude-pattern>
+
+    <!--           for model   -->
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/models/City.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/models/Country.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/models/Match.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/models/Player.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/models/PointTable.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/models/State.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/models/Team.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/models/Venue.java</exclude-pattern>
+
+    <!--   For  Services   -->
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/services/CityService.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/services/CountryService.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/services/DateTimeService.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/services/MatchService.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/services/PlayerService.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/services/PointService.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/services/ResultService.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/services/TeamService.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/services/UpdateResultService.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/services/VenueService.java</exclude-pattern>
+
+
+    <!--  For vallidation    -->
+
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/validation/VenueValidate.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/main/java/com/knoldus/kup/ipl/validation/VenueValidation.java</exclude-pattern>
+
+    <!--   For Model test    -->
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/models/CityTest.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/models/CountryTest.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/models/MatchTest.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/models/PlayerTest.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/models/PointTableTest.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/models/StateTest.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/models/TeamTest.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/models/VenueTest.java</exclude-pattern>
+
+    <!--   For Service test    -->
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/services/CityServiceTest.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/services/CountryServiceTest.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/services/MatchServiceTest.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/services/PlayerServiceTest.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/services/ResultServiceTest.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/services/TeamServiceTest.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/services/VenueServiceTest.java</exclude-pattern>
+
+
+    <!--   For Repository test    -->
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/repository/MatchRepositoryTest.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/repository/PlayerRepositoryTest.java</exclude-pattern>
+    <exclude-pattern>.*/home/knoldus/Downloads/IPL_Management-main/src/test/java/com/knoldus/kup/ipl/repository/TeamRepositoryTest.java</exclude-pattern>
+
+
+    <!-- this file contains are parse error explicitly -->
+
+    <rule ref="category/java/bestpractices.xml" />
+    <rule ref="category/java/codestyle.xml" />
+    <rule ref="category/java/design.xml" />
+    <rule ref="category/java/documentation.xml" />
+    <rule ref="category/java/errorprone.xml" />
+    <rule ref="category/java/multithreading.xml" />
+    <rule ref="category/java/performance.xml" />
+    <rule ref="category/java/security.xml" />
+
+</ruleset>

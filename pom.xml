@@ -43,6 +43,32 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<!--		Using Kafka-->
+		<!-- https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka -->
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.13.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.9</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.13.1</version>
+		</dependency>
+
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -93,12 +119,6 @@
 			<artifactId>thymeleaf-extras-java8time</artifactId>
 			<version>3.0.4.RELEASE</version>
 		</dependency>
-
-<!--		<dependency>-->
-<!--			<groupId>com.fasterxml.jackson.core</groupId>-->
-<!--			<artifactId>jackson-core</artifactId>-->
-<!--			<version>2.13.0</version>-->
-<!--		</dependency>-->
 
 		<!-- hot swapping, enable live reload -->
 		<dependency>
@@ -159,17 +179,12 @@
 			<scope>test</scope>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>org.junit.vintage</groupId>-->
-<!--			<artifactId>junit-vintage-engine</artifactId>-->
-<!--			<scope>test</scope>-->
-<!--			<exclusions>-->
-<!--				<exclusion>-->
-<!--					<groupId>org.hamcrest</groupId>-->
-<!--					<artifactId>hamcrest-core</artifactId>-->
-<!--				</exclusion>-->
-<!--			</exclusions>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>net.sourceforge.pmd</groupId>
+			<artifactId>pmd-java</artifactId>
+			<version>6.41.0</version>
+			<type>pom</type>
+		</dependency>
 
 	</dependencies>
 
