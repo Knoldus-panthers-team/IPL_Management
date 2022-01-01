@@ -17,7 +17,7 @@ public class PointService {
 
     private static final DecimalFormat df = new DecimalFormat("0.000");
 
-    public PointTable createNewTable(PointTable pointTableTeam){
+    public PointTable createNewTable(){
         PointTable pointTableNew = new PointTable();
         pointTableNew.setTotalMatch(0);
         pointTableNew.setWin(0);
@@ -45,13 +45,13 @@ public class PointService {
         double runRate2 = team2Runs/team2Over;
 
         if (pointTableTeam1==null) {
-            pointTableTeam1 = this.createNewTable(pointTableTeam1);
+            pointTableTeam1 = this.createNewTable();
             pointTableTeam1.setTeam(match.getTeam1());
             pointRepository.save(pointTableTeam1);
         }
 
         if (pointTableTeam2==null){
-            pointTableTeam2 = this.createNewTable(pointTableTeam2);
+            pointTableTeam2 = this.createNewTable();
             pointTableTeam2.setTeam(match.getTeam2());
         }
 

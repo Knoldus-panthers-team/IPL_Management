@@ -1,7 +1,5 @@
 package com.knoldus.kup.ipl.controllers;
 
-import com.knoldus.kup.ipl.models.Country;
-import com.knoldus.kup.ipl.models.Team;
 import com.knoldus.kup.ipl.models.Player;
 
 import com.knoldus.kup.ipl.services.CountryService;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.List;
 
 
 @Controller
@@ -42,20 +39,13 @@ public class PlayerController {
     public String addPlayer(@Valid Player player, BindingResult bindingResult, RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors())
         { return "addPlayer"; }
-        else { playerService.getSuccessAlertOnSave(player,redirectAttributes); }
+        else { playerService.getAlertOnSave(player,redirectAttributes); }
         return "redirect:/ipl/admin";
     }
 
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") long id, Model model) {
-        Player player = playerService.getPlayerById(id);
-
-        List<Team> teams = teamService.getAllTeams();
-        List<Country> countries = countryService.getAllCountries();
-
-        model.addAttribute("player", player);
-        model.addAttribute("teams",teams);
-        model.addAttribute("countries",countries);
+        playerService.getPlayerWithModel(id,model);
         return "update-player";
     }
 
@@ -65,18 +55,12 @@ public class PlayerController {
         if (bindingResult.hasErrors()) {
             return "update-player";
         }
-        playerService.savePlayer(player);
-        redirectAttributes.addFlashAttribute("message", "Player updated successfully");
-        redirectAttributes.addFlashAttribute("messageType", "player");
-        redirectAttributes.addFlashAttribute("alertType", "success");
+        playerService.getAlertOnUpdate(player, redirectAttributes);
         return "redirect:/ipl/admin";
     }
     @GetMapping("/delete/{id}")
     public String deletePlayer(@PathVariable("id") long id, Model model, RedirectAttributes redirectAttributes) {
-        playerService.deletePlayer(id);
-        redirectAttributes.addFlashAttribute("message", "Player deleted successfully");
-        redirectAttributes.addFlashAttribute("messageType", "player");
-        redirectAttributes.addFlashAttribute("alertType", "success");
+        playerService.getAlertOnDelete(id, redirectAttributes);
         return "redirect:/ipl/admin";
     }
 }

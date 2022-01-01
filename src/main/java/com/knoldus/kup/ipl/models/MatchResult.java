@@ -1,10 +1,7 @@
 package com.knoldus.kup.ipl.models;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.annotation.Id;
 import org.springframework.stereotype.Component;
-//import org.springframework.data.mongodb.core.mapping.Document;
-
 import javax.persistence.Transient;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,9 +24,7 @@ public class MatchResult {
 
     @Transient
     private String team2FinalScore;
-
-//    private String tossChoice;
-
+    
     private String tossWinnerTeam;
     private String team1Over;
     private String team2Over;
@@ -70,7 +65,6 @@ public class MatchResult {
                 parsedDate = inputFormat.parse(matchDate);
                 String formattedDate = outputFormat.format(parsedDate);
                 this.matchDate = formattedDate;
-                System.out.println("hello---------------------------"+formattedDate+"  ----"+this.matchDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -129,7 +123,6 @@ public class MatchResult {
 
     public String getTeam1Over() {
         String OverTeam1Over = team1Over;
-        System.out.println("-------------------------------------"+ OverTeam1Over == null);
         if(OverTeam1Over == null){
             return "Yet to be played";
         }
@@ -142,7 +135,6 @@ public class MatchResult {
 
     public String getTeam2Over() {
         String OverTeam2Over = team2Over;
-        System.out.println("-------------------------------------"+ OverTeam2Over == null);
         if(OverTeam2Over == null){
             return "Yet to be played";
         }
@@ -185,18 +177,9 @@ public class MatchResult {
         this.tossWinnerTeam = tossWinnerTeam;
     }
 
-//    public String getTossChoice() {
-//        return tossChoice;
-//    }
-
-//    public void setTossChoice(String tossChoice) {
-//        this.tossChoice = tossChoice;
-//    }
-
     public String getTeam1FinalScore() {
         String score = getTeam1Score();
         String wickets = getTeam1Wickets();
-        System.out.println("-------------------------------------"+ score +"--------"+wickets);
         if(score != null){
             return this.team1FinalScore = score+"/"+wickets;
         }
@@ -205,31 +188,9 @@ public class MatchResult {
     public String getTeam2FinalScore() {
         String score = getTeam2Score();
         String wickets = getTeam2Wickets();
-        System.out.println("-------------------------------------"+ score +"--------"+wickets);
         if(score != null){
             return this.team2FinalScore = score+"/"+wickets;
         }
-        return this.team2FinalScore= " ";
+        return this.team2FinalScore = " ";
     }
-
-
-//    @Override
-//    public String toString() {
-//        return "MatchResult{" +
-//                "id=" + id +
-//                ", matchDate='" + matchDate + '\'' +
-//                ", team1Wickets='" + team1Wickets + '\'' +
-//                ", team2Wickets='" + team2Wickets + '\'' +
-//                ", matchWinner='" + matchWinner + '\'' +
-//                ", result='" + result + '\'' +
-//                ", team1Score='" + team1Score + '\'' +
-//                ", team2Score='" + team2Score + '\'' +
-//                ", tossWinnerTeam='" + tossWinnerTeam + '\'' +
-//                ", team1Over='" + team1Over + '\'' +
-//                ", team2Over='" + team2Over + '\'' +
-//                ", venue='" + venue + '\'' +
-//                ", team1='" + team1 + '\'' +
-//                ", team2='" + team2 + '\'' +
-//                '}';
-//    }
 }

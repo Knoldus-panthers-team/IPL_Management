@@ -34,7 +34,7 @@
     <div class="col-8 panel-bg card">
       <div class="card-body">
         <h1 class="d-flex justify-content-center text-white fw-bold">Add Result</h1>
-        <form method="post" action="#" th:action="@{/result/add/{id}(id=${match.id})}" th:object="${match}">
+        <form method="post" action="#" th:action="@{/result/add}" th:object="${match}">
           <!-- 2 column grid layout with text inputs for the first and last names -->
           <p class="text text-danger" id="errorMessage"></p>
           <div class="row mb-2" hidden>

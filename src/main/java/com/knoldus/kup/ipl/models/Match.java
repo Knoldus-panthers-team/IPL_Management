@@ -1,7 +1,5 @@
 package com.knoldus.kup.ipl.models;
 
-import org.springframework.ui.Model;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
@@ -86,7 +84,6 @@ public class Match {
                 parsedDate = inputFormat.parse(matchDate);
                 String formattedDate = outputFormat.format(parsedDate);
                 this.matchDate = formattedDate;
-                System.out.println("hello---------------------------"+formattedDate+"  ----"+this.matchDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -145,7 +142,6 @@ public class Match {
 
     public String getTeam1Over() {
         String OverTeam1Over = team1Over;
-        System.out.println("-------------------------------------"+ OverTeam1Over == null);
         if(OverTeam1Over == null){
             return "Yet to be played";
         }
@@ -158,7 +154,6 @@ public class Match {
 
     public String getTeam2Over() {
         String OverTeam2Over = team2Over;
-        System.out.println("-------------------------------------"+ OverTeam2Over == null);
         if(OverTeam2Over == null){
             return "Yet to be played";
         }
@@ -212,7 +207,6 @@ public class Match {
     public String getTeam1FinalScore() {
         String score = getTeam1Score();
         String wickets = getTeam1Wickets();
-        System.out.println("-------------------------------------"+ score +"--------"+wickets);
         if(score != null){
             return this.team1FinalScore = score+"/"+wickets;
         }
@@ -221,7 +215,6 @@ public class Match {
     public String getTeam2FinalScore() {
         String score = getTeam2Score();
         String wickets = getTeam2Wickets();
-        System.out.println("-------------------------------------"+ score +"--------"+wickets);
         if(score != null){
             return this.team2FinalScore = score+"/"+wickets;
         }

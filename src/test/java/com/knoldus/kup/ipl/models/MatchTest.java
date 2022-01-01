@@ -4,13 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 class MatchTest {
-
-    Venue venue;
-
+    
     Match match;
-
-    City city;
-
+    
     Team team1;
 
     Team team2;
@@ -68,7 +64,15 @@ class MatchTest {
         String expectedMatchDate  = "2021-12-17 11:36 AM";
         assertEquals(actualMatchDate, expectedMatchDate);
     }
-
+    
+    @Test
+    void setMatchDateNotContainsPM() {
+        match.setMatchDate("2021-12-31T22:17");
+        String actualMatchDate = match.getMatchDate();
+        String expectedMatchDate  = "2021-12-31 10:17 PM";
+        assertEquals(expectedMatchDate, actualMatchDate);
+    }
+    
     @Test
     void getTeam1Wickets() {
         String actualTeam1Wickets = match.getTeam1Wickets();

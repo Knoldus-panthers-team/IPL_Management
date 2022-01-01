@@ -4,7 +4,9 @@ import com.knoldus.kup.ipl.models.Match;
 import com.knoldus.kup.ipl.repository.MatchRepository;
 import com.knoldus.kup.ipl.repository.TeamRepository;
 import com.knoldus.kup.ipl.repository.VenueRepository;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -75,23 +77,64 @@ public class MatchService {
         return false;
     }
 
-//    public Model getMatchDetails(Model model){
-//        model.addAttribute("teams", teamRepository.findAll());
-//        model.addAttribute("venues",venueRepository.findAll());
-//        model.addAttribute("match",this.getNewMatch());
-//        return model;
-//    }
+    public Model getMatchDetails(Model model, Long id){
+        model.addAttribute("teams", teamRepository.findAll());
+        model.addAttribute("venues",venueRepository.findAll());
+        Match match = this.getMatchById(id).orElseThrow(()->new IllegalArgumentException("Invalid match id: "+id));
+        model.addAttribute("match",match);
+        return model;
+    }
     
     public RedirectAttributes getAlertOnSave(RedirectAttributes redirectAttributes, Match match){
         matchRepository.save(match);
+        redirectAttributes.addFlashAttribute("message", "Match scheduled successfully");
         this.getSuccessMessage(redirectAttributes);
-        redirectAttributes.addFlashAttribute("alertType", "success");
         return redirectAttributes;
     }
     
     public RedirectAttributes getSuccessMessage(RedirectAttributes redirectAttributes){
-        redirectAttributes.addFlashAttribute("message", "Match scheduled successfully");
         redirectAttributes.addFlashAttribute("messageType", "match");
+        redirectAttributes.addFlashAttribute("alertType", "success");
+        return redirectAttributes;
+    }
+    public RedirectAttributes getErrorMessage(RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("messageType", "match");
+        redirectAttributes.addFlashAttribute("alertType", "error");
+        return redirectAttributes;
+    }
+    
+    public RedirectAttributes getAlertOnUpdate(RedirectAttributes redirectAttributes, Match match){
+        matchRepository.save(match);
+        redirectAttributes.addFlashAttribute("message", "Match rescheduled successfully");
+        this.getSuccessMessage(redirectAttributes);
+        return redirectAttributes;
+    }
+    
+    public RedirectAttributes getAlertIfSlotBooked(RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("message",
+                "This slot is booked for other match. " +
+                        "Please select another date or venue");
+        this.getErrorMessage(redirectAttributes);
+        return redirectAttributes;
+    }
+    
+    public RedirectAttributes getAlertIfTeamSame(RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("message", "Teams can't be same");
+        this.getErrorMessage(redirectAttributes);
+        return redirectAttributes;
+    }
+    
+    public Model getMatchesWithModel(Model model){
+        List<Match> matches = (List<Match>) matchRepository.findAll();
+        model.addAttribute("match",this.getNewMatch());
+        model.addAttribute("matchList",matches);
+        return model;
+    }
+    
+    public RedirectAttributes getAlertOnDelete(RedirectAttributes redirectAttributes,long id){
+        matchRepository.deleteById(id);
+        redirectAttributes.addFlashAttribute("message", "Match deleted successfully");
+        this.getSuccessMessage(redirectAttributes);
         return redirectAttributes;
     }
 }
