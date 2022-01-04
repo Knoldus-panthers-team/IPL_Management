@@ -74,7 +74,7 @@ PlayerService playerService;
         return "index";
     }
 
-    @GetMapping("")
+    @GetMapping("/")
     public String getDashboard(Model model){
         List<Player> players = playerService.getAllPlayers();
         model.addAttribute("players",players);

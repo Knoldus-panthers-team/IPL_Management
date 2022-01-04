@@ -71,6 +71,7 @@ public class TeamService {
     
     public Model getTeamEditForm(Model model, Long teamId){
         if(this.getTeamById(teamId).isPresent()) {
+            System.out.println("..................sfff");
             Team team = this.getTeamById(teamId).orElse(null);
             List<City> cities = cityService.getAllCities();
             model.addAttribute("team", team);

@@ -21,22 +21,37 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/players")
 public class PlayerController {
-
+    /**
+     * Injecting player service.
+     */
     @Autowired
-    PlayerService playerService;
+    private PlayerService playerService;
+    /**
+     * Injecting team service.
+     */
     @Autowired
-    TeamService teamService;
+    private TeamService teamService;
+    /**
+     * Injecting country service.
+     */
     @Autowired
-    CountryService countryService;
+    private CountryService countryService;
 
 //    @GetMapping("/addForm")
 //    public String addForm(Model model){
 //        model.addAttribute("player", playerService.getNewPlayerObject());
 //        return "add-player";
 //    }
-
+    /**
+     * @param player
+     * @param bindingResult
+     * @param redirectAttributes
+     * @return admin dashboard
+     */
     @PostMapping("/add")
-    public String addPlayer(@Valid Player player, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+    public String addPlayer(final @Valid Player player,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors())
         { return "addPlayer"; }
         else { playerService.getAlertOnSave(player,redirectAttributes); }

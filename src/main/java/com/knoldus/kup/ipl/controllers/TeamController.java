@@ -1,7 +1,5 @@
 package com.knoldus.kup.ipl.controllers;
 
-import com.knoldus.kup.ipl.models.City;
-import com.knoldus.kup.ipl.models.Player;
 import com.knoldus.kup.ipl.models.Team;
 import com.knoldus.kup.ipl.services.CityService;
 import com.knoldus.kup.ipl.services.PlayerService;
@@ -14,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/teams")
@@ -30,13 +26,6 @@ public class TeamController {
     CityService cityService;
     @Autowired
     PlayerService playerService;
-
-
-    @GetMapping("/addTeam")
-    public String addTeamForm(Model model){
-        model.addAttribute("team",teamService.getNewTeamObject());
-        return "addTeam";
-    }
 
     @PostMapping("/add")
     public String saveTeam(Team team, BindingResult result, RedirectAttributes redirectAttributes){
@@ -77,7 +66,7 @@ public class TeamController {
     }
 
     @GetMapping("/team/{team_id}")
-    public String getTeam(@PathVariable("team_id") Long team_id,Model model, RedirectAttributes redirectAttributes){
+    public String getTeamPlayers(@PathVariable("team_id") Long team_id,Model model, RedirectAttributes redirectAttributes){
         if (playerService.getPlayersByTeamId(team_id)!=null && teamService.getTeamById(team_id).isPresent()){
             playerService.getPlayersByTeamIdWithModel(model,team_id);
             return "admin-teams";

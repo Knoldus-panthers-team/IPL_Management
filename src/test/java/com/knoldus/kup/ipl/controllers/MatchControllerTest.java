@@ -1,112 +1,139 @@
 package com.knoldus.kup.ipl.controllers;
 
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.when;
+
+import com.knoldus.kup.ipl.models.Match;
 import com.knoldus.kup.ipl.repository.MatchRepository;
 import com.knoldus.kup.ipl.services.MatchService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.ui.ConcurrentModel;
+import org.springframework.ui.ExtendedModelMap;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
-
-import static org.junit.Assert.assertEquals;
-
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = MatchController.class)
-@Component
-public class MatchControllerTest {
-
+@ContextConfiguration(classes = {MatchController.class})
+@ExtendWith(SpringExtension.class)
+class MatchControllerTest {
+    @Autowired
+    private MatchController matchController;
+    
     @MockBean
-    MatchRepository matchRepository;
-
-//    @Autowired
-//    VenueRepository venueRepository;
-//
-//    @Autowired
-//    VenueService venueService;
-//
-    @Autowired
-    MatchService matchService;
-//
-//    Match match1,match2,match3;
-//
-//    List<Match> matchesList;
-//    List<Venue> venueList;
-//    RedirectAttributes redirectAttributes;
+    private MatchRepository matchRepository;
     
-    protected MockMvc mvc;
+    @MockBean
+    private MatchService matchService;
     
-    @Autowired
-    WebApplicationContext webApplicationContext;
     
-//    Venue venue1,venue2;
-//    Team team1;
-//    Team team2;
-    
-    @Before
-    public void setUp() {
-        mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        
-//        Country country = new Country(1L,"India");
-//        City city1 = new City(1L,"Channai",country);
-//        City city2 = new City(1L,"Kolkata",country);
-//        venue1 = new Venue(1L,"Kolkata Stadium",city1);
-//        venue2 = new Venue(1L,"Firoz Shah Kotla",city1);
-//
-//        team1 = new Team(1L,"KKR", city1);
-//        team2 = new Team(2L,"CSK", city2);
-//        match1= new Match(1L,"1/05/2021",venue1,team1,team2);
-//        match2 = new Match(2L,"3/05/2021",venue1,team1,team2);
-//        match3 = new Match(3L,"4/05/2021",venue1,team1,team2);
-//        matchesList = Arrays.asList(match1,match2,match3);
-//        venueList = Arrays.asList(venue1,venue2);
-//
-//        Mockito.when(matchRepository.findAll()).thenReturn(matchesList);
-//        redirectAttributes = new RedirectAttributesModelMap();
+    @Test
+    void testGetMatches() throws Exception {
+        when(this.matchService.getMatchesWithModel(new ExtendedModelMap())).thenReturn(new ExtendedModelMap());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/matches/list");
+        MockMvcBuilders.standaloneSetup(this.matchController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().size(0))
+                .andExpect(MockMvcResultMatchers.view().name("match-details"))
+                .andExpect(MockMvcResultMatchers.forwardedUrl("match-details"));
     }
     
     @Test
-    public void saveMatch() {
+    void testMatchUpdateIfSlotIsBooked() throws Exception {
+        when(this.matchService.getAlertIfSlotBooked(new RedirectAttributesModelMap()))
+                .thenReturn(new RedirectAttributesModelMap());
+        Match match = new Match();
+        when(this.matchService.isSlotBooked((com.knoldus.kup.ipl.models.Match) any())).thenReturn(true);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/matches/update/{id}", 1L);
+        MockMvcBuilders.standaloneSetup(this.matchController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.model().size(0))
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/matches/edit/1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/matches/edit/1"));
     }
     
     @Test
-    public void showEditForm() {
-        String uri = "/test";
-//        Mockito.when(matchRepository.findById(2L)).thenReturn(Optional.ofNullable(match2));
-//        Mockito.when(venueRepository.findAll()).thenReturn(venueList);
-        MvcResult mvcResult = null;
-        try {
-            mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)).andReturn();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        int status = mvcResult.getResponse().getStatus();
-        assertEquals(200, status);
+    void testMatchUpdate2() throws Exception {
+        when(this.matchService.getAlertIfTeamSame((new RedirectAttributesModelMap())))
+                .thenReturn(new RedirectAttributesModelMap());
+        when(this.matchService.isTeamSame((com.knoldus.kup.ipl.models.Match) any())).thenReturn(true);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/matches/update/{id}", 1L);
+        MockMvcBuilders.standaloneSetup(this.matchController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.model().size(0))
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/matches/edit/1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/matches/edit/1"));
     }
     
     @Test
-    public void matchUpdate() {
+    void testMatchUpdateIfSuccess() throws Exception {
+        when(this.matchService.getAlertOnUpdate(new RedirectAttributesModelMap(),
+                (new Match()))).thenReturn(new RedirectAttributesModelMap());
+        when(this.matchService.isSlotBooked(new Match())).thenReturn(false);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/matches/update/{id}", 1L);
+        MockMvcBuilders.standaloneSetup(this.matchController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.model().size(0))
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/ipl/admin"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/ipl/admin"));
     }
     
     @Test
-    public void getMatches() {
+    void testSaveMatch() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/matches/save");
+        MockMvcBuilders.standaloneSetup(this.matchController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().size(1))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("match"))
+                .andExpect(MockMvcResultMatchers.view().name("add-match"))
+                .andExpect(MockMvcResultMatchers.forwardedUrl("add-match"));
     }
     
     @Test
-    public void list() {
+    void testShowEditForm() throws Exception {
+        Model model = new ExtendedModelMap();
+        when(this.matchService.getMatchDetails(model, 1L))
+                .thenReturn(model);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/matches/edit/{id}", 1L);
+        MockMvcBuilders.standaloneSetup(this.matchController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().size(0))
+                .andExpect(MockMvcResultMatchers.view().name("update-match"))
+                .andExpect(MockMvcResultMatchers.forwardedUrl("update-match"));
     }
     
     @Test
-    public void deleteMatch() {
+    void testDeleteMatch() throws Exception {
+        when(this.matchService.getAlertOnDelete(new RedirectAttributesModelMap(),
+                1L)).thenReturn(new RedirectAttributesModelMap());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/matches/delete/{id}", 1L);
+        MockMvcBuilders.standaloneSetup(this.matchController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.model().size(0))
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/ipl/admin"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/ipl/admin"));
     }
 }
+

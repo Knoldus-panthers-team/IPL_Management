@@ -72,8 +72,6 @@ class PlayerServiceTest {
         for (int i=0; i<18; i++) {
             fakeList.add(new Player());
         }
-
-      
         team1 = new Team(1L,"KKR", city1);
         team2 = new Team(2L,"CSK", city2);
         teamList = Arrays.asList(team1,team2);
