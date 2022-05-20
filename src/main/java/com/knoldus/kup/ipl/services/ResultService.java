@@ -124,7 +124,7 @@ public class ResultService {
     
     public RedirectAttributes getAlertOnUpdate(RedirectAttributes redirectAttributes, Match match){
         updateResultService.updatePointTable(match);
-//        kafkaService.sendMatch(match);
+//        kafkaServicez.sendMatch(match);
         redirectAttributes.addFlashAttribute("message", "Score updated successfully");
         this.getSuccessMessage(redirectAttributes);
         return redirectAttributes;
