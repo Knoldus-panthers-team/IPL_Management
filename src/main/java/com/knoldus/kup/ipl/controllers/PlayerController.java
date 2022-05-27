@@ -17,7 +17,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
-
+/**
+ * Class PlayerController.
+ */
 @Controller
 @RequestMapping("/players")
 public class PlayerController {
@@ -50,31 +52,55 @@ public class PlayerController {
      */
     @PostMapping("/add")
     public String addPlayer(final @Valid Player player,
-            BindingResult bindingResult,
-            RedirectAttributes redirectAttributes){
-        if(bindingResult.hasErrors())
-        { return "addPlayer"; }
-        else { playerService.getAlertOnSave(player,redirectAttributes); }
+            final BindingResult bindingResult,
+            final RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "addPlayer"; }
+        else { playerService.getAlertOnSave(player, redirectAttributes); }
         return "redirect:/ipl/admin";
     }
 
+    /**
+     *
+     * @param id
+     * @param model
+     * @return update-player
+     */
     @GetMapping("/edit/{id}")
-    public String showUpdateForm(@PathVariable("id") long id, Model model) {
-        playerService.getPlayerWithModel(id,model);
+    public String showUpdateForm(@PathVariable("id") final long id, final Model model) {
+        playerService.getPlayerWithModel(id, model);
         return "update-player";
     }
 
+    /**
+     *
+     * @param id
+     * @param player
+     * @param bindingResult
+     * @param redirectAttributes
+     * @return admin dashboard
+     */
     @PostMapping("/update/{id}")
-    public String updatePlayer(@PathVariable("id") long id, @Valid Player player,
-                               BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String updatePlayer(@PathVariable("id")
+                                   final long id, @Valid final Player player,
+                               final BindingResult bindingResult,
+                               final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "update-player";
         }
         playerService.getAlertOnUpdate(player, redirectAttributes);
         return "redirect:/ipl/admin";
     }
+
+    /**
+     *
+     * @param id
+     * @param model
+     * @param redirectAttributes
+     * @return admin dashboard
+     */
     @GetMapping("/delete/{id}")
-    public String deletePlayer(@PathVariable("id") long id, Model model, RedirectAttributes redirectAttributes) {
+    public String deletePlayer(@PathVariable("id") final long id, final Model model, final RedirectAttributes redirectAttributes) {
         playerService.getAlertOnDelete(id, redirectAttributes);
         return "redirect:/ipl/admin";
     }

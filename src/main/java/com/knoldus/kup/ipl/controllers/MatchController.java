@@ -15,58 +15,106 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
+/**
+ * MatchController.
+ */
 @Controller
 @RequestMapping("/matches")
 public class MatchController {
-
+    /**
+     * Injecting match repository.
+     */
     @Autowired
     private MatchRepository matchRepository;
-
+    /**
+     * Injecting match service.
+     */
     @Autowired
     private MatchService matchService;
 
+    /**
+     *
+     * @param match
+     * @param bindingResult
+     * @param redirectAttributes
+     * @return add-match
+     */
     @PostMapping("/save")
-    public String saveMatch(final @Valid Match match, BindingResult bindingResult, RedirectAttributes redirectAttributes){
-        if (bindingResult.hasErrors()){
+    public String saveMatch(final @Valid Match match,
+                            final BindingResult bindingResult,
+                            final RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
             return "add-match";
         }
         matchService.getAlertOnSave(redirectAttributes, match);
         return "redirect:/ipl/admin";
     }
 
+    /**
+     *
+     * @param id
+     * @param model
+     * @return update-match
+     */
     @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable("id") long id, Model model) {
+    public String showEditForm(@PathVariable("id")
+                                   final long id, final Model model) {
         matchService.getMatchDetails(model, id);
         return "update-match";
     }
 
+    /**
+     *
+     * @param id
+     * @param match
+     * @param model
+     * @param bindingResult
+     * @param redirectAttributes
+     * @return add match
+     */
     @PostMapping("/update/{id}")
-    public String matchUpdate(@PathVariable long id, Match match, Model model,
-                              BindingResult bindingResult, RedirectAttributes redirectAttributes){
-        if (bindingResult.hasErrors()){
+    public String matchUpdate(@PathVariable final long id,
+                              final Match match, final Model model,
+                              final BindingResult bindingResult,
+                              final RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
             return "add-match";
         }
-        if(matchService.isSlotBooked(match)){
+        if (matchService.isSlotBooked(match)) {
             matchService.getAlertIfSlotBooked(redirectAttributes);
-            return "redirect:/matches/edit/"+match.getId();
+            return "redirect:/matches/edit/" + match.getId();
         }
-        if(matchService.isTeamSame(match)){
+        if (matchService.isTeamSame(match)) {
             matchService.getAlertIfTeamSame(redirectAttributes);
-            return "redirect:/matches/edit/"+match.getId();
+            return "redirect:/matches/edit/" + match.getId();
         }
         matchService.getAlertOnUpdate(redirectAttributes, match);
         return "redirect:/ipl/admin";
     }
 
+    /**
+     *
+     * @param model
+     * @return match-details
+     */
     @GetMapping("/list")
-    public String getMatches(Model model){
+    public String getMatches(final Model model) {
         matchService.getMatchesWithModel(model);
         return "match-details";
     }
 
+    /**
+     *
+     * @param id
+     * @param model
+     * @param redirectAttributes
+     * @return admin page
+     */
     @GetMapping("/delete/{id}")
-    public String deleteMatch(@PathVariable("id") long id, Model model, RedirectAttributes redirectAttributes) {
-        matchService.getAlertOnDelete(redirectAttributes,id);
+    public String deleteMatch(@PathVariable("id")
+                                  final long id, final Model model,
+                              final RedirectAttributes redirectAttributes) {
+        matchService.getAlertOnDelete(redirectAttributes, id);
         return "redirect:/ipl/admin";
     }
 
