@@ -13,36 +13,69 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
+/**
+ * Class TeamController.
+ */
 @Controller
 @RequestMapping("/teams")
 public class TeamController {
-
-    /*
-    ***************************************** SERVICES ****************************************
+    /**
+     * Injecting team Service.
      */
     @Autowired
-    TeamService teamService;
+    private TeamService teamService;
+    /**
+     * Injecting city Service.
+     */
     @Autowired
-    CityService cityService;
+    private CityService cityService;
+    /**
+     * Injecting Player Service.
+     */
     @Autowired
-    PlayerService playerService;
+    private PlayerService playerService;
 
+    /**
+     *
+     * @param team
+     * @param result
+     * @param redirectAttributes
+     * @return admin dashboard
+     */
     @PostMapping("/add")
-    public String saveTeam(Team team, BindingResult result, RedirectAttributes redirectAttributes){
+    public String saveTeam(final Team team,
+                           final BindingResult result,
+                           final RedirectAttributes redirectAttributes) {
         teamService.getAlertOnSave(team, redirectAttributes);
         return "redirect:/ipl/admin";
     }
 
+    /**
+     *
+     * @param id
+     * @param model
+     * @return update-team
+     */
     @GetMapping("/edit/{id}")
-    public String UpdateForm(@PathVariable("id") long id,
-                                 Model model) {
+    public String updateForm(@PathVariable("id") final long id,
+                                 final Model model) {
         teamService.getTeamEditForm(model, id);
         return "update-team";
     }
 
+    /**
+     *
+     * @param id
+     * @param team
+     * @param bindingResult
+     * @param redirectAttributes
+     * @return admin dashboard
+     */
     @PostMapping("/update/{id}")
-    public String updateTeam(@PathVariable("id") long id, @Valid Team team,
-                             BindingResult bindingResult,RedirectAttributes redirectAttributes) {
+    public String updateTeam(@PathVariable("id")
+                                 final long id, @Valid final Team team,
+                             final BindingResult bindingResult,
+                             final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "update-team";
         }
@@ -50,25 +83,52 @@ public class TeamController {
         return "redirect:/ipl/admin";
     }
 
+    /**
+     *
+     * @param id
+     * @param model
+     * @param redirectAttributes
+     * @return admin dashboard
+     */
     @GetMapping("/delete/{id}")
-    public String deleteTeam(@PathVariable("id") long id, Model model,RedirectAttributes redirectAttributes) {
+    public String deleteTeam(@PathVariable("id")
+                                 final long id, final Model model,
+                             final RedirectAttributes redirectAttributes) {
         teamService.getAlertOnDelete(id, redirectAttributes);
         return "redirect:/ipl/admin";
     }
 
-    @GetMapping("/players/{team_id}")
-    public String getPlayers(@PathVariable("team_id") Long team_id,Model model){
-        if (playerService.getPlayersByTeamId(team_id)!=null && teamService.getTeamById(team_id).isPresent()){
-            playerService.getPlayersByTeamIdWithModel(model,team_id);
+    /**
+     *
+     * @param teamId
+     * @param model
+     * @return ipl homepage
+     */
+    @GetMapping("/players/{teamId}")
+    public String getPlayers(@PathVariable("teamId")
+                                 final Long teamId, final Model model) {
+        if (playerService.getPlayersByTeamId(teamId) != null
+                && teamService.getTeamById(teamId).isPresent()) {
+            playerService.getPlayersByTeamIdWithModel(model, teamId);
             return "team-details";
         }
         return "redirect:/ipl";
     }
 
-    @GetMapping("/team/{team_id}")
-    public String getTeamPlayers(@PathVariable("team_id") Long team_id,Model model, RedirectAttributes redirectAttributes){
-        if (playerService.getPlayersByTeamId(team_id)!=null && teamService.getTeamById(team_id).isPresent()){
-            playerService.getPlayersByTeamIdWithModel(model,team_id);
+    /**
+     *
+     * @param teamId
+     * @param model
+     * @param redirectAttributes
+     * @return admin dashboard
+     */
+    @GetMapping("/team/{teamId}")
+    public String getTeamPlayers(@PathVariable("teamId")
+                                     final Long teamId, final Model model,
+                                 final RedirectAttributes redirectAttributes) {
+        if (playerService.getPlayersByTeamId(teamId) != null
+                && teamService.getTeamById(teamId).isPresent()) {
+            playerService.getPlayersByTeamIdWithModel(model, teamId);
             return "admin-teams";
         }
         teamService.getAlertOnNotFound(redirectAttributes);

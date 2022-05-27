@@ -1,8 +1,5 @@
 package com.knoldus.kup.ipl.controllers;
-
 import com.knoldus.kup.ipl.models.Match;
-import com.knoldus.kup.ipl.models.Team;
-import com.knoldus.kup.ipl.models.Venue;
 import com.knoldus.kup.ipl.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,53 +10,95 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
 
+/**
+ * Class ResultController.
+ */
 @Controller
 @RequestMapping("result")
 public class ResultController {
-    
+    /**
+     * Injecting Result Service.
+     */
     @Autowired
-    ResultService resultService;
-    
+    private ResultService resultService;
 //    @Autowired
 //    private ProducerService kafkaService;
-    
+    /**
+     * Injecting UpdateResult Service.
+     */
     @Autowired
-    UpdateResultService updateResultService;
-    
+    private UpdateResultService updateResultService;
+    /**
+     * Injecting point Service.
+     */
     @Autowired
-    PointService pointService;
-    
-    
-    @GetMapping("/addScore/{match_id}")
-    public String showAddForm(@PathVariable ("match_id") long match_id, Model model) {
-        resultService.addScores(match_id, model);
+    private PointService pointService;
+
+    /**
+     *
+     * @param matchId
+     * @param model
+     * @return add-result
+     */
+    @GetMapping("/addScore/{matchId}")
+    public String showAddForm(@PathVariable ("matchId")
+                                  final long matchId, final Model model) {
+        resultService.addScores(matchId, model);
         return "add-result";
     }
-    
+
+    /**
+     *
+     * @param matchId
+     * @param model
+     * @return update-result
+     */
     @GetMapping("/editScore/{match_id}")
-    public String showUpdateForm(@PathVariable ("match_id") long match_id, Model model) {
-        resultService.editScores(match_id, model);
+    public String showUpdateForm(@PathVariable ("match_id")
+                                     final long matchId, final Model model) {
+        resultService.editScores(matchId, model);
         return "update-result";
     }
-    
+
+    /**
+     *
+     * @param id
+     * @param match
+     * @param model
+     * @param redirectAttributes
+     * @return admin dashboard
+     */
     @PostMapping("/add/{id}")
-    public String ScoreSave(@PathVariable("id") long id, Match match, Model model, RedirectAttributes redirectAttributes){
+    public String scoreSave(@PathVariable("id") final long id,
+                            final Match match, final Model model,
+                            final RedirectAttributes redirectAttributes) {
         resultService.getResult(match);
         pointService.addPointTable(match);
 //        kafkaService.sendMatch(match);
-        redirectAttributes.addFlashAttribute("message", "Score added successfully");
-        redirectAttributes.addFlashAttribute("messageType", "score");
-        redirectAttributes.addFlashAttribute("alertType", "success");
+        redirectAttributes.addFlashAttribute(
+                "message", "Score added successfully");
+        redirectAttributes.addFlashAttribute(
+                "messageType", "score");
+        redirectAttributes.addFlashAttribute(
+                "alertType", "success");
         return "redirect:/ipl/admin";
     }
-    
+
+    /**
+     *
+     * @param id
+     * @param match
+     * @param model
+     * @param redirectAttributes
+     * @return admin dashboard
+     */
     @PostMapping("/update/{id}")
-    public String ScoreUpdate(@PathVariable("id") long id, Match match, Model model, RedirectAttributes redirectAttributes){
+    public String scoreUpdate(@PathVariable("id") final long id,
+                              final Match match, final Model model,
+                              final RedirectAttributes redirectAttributes) {
 //        kafkaService.sendMatch(match);
         updateResultService.updatePointTable(match, redirectAttributes);
         return "redirect:/ipl/admin";
     }
-    
 }

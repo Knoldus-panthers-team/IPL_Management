@@ -10,56 +10,78 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Class IPLController.
+ */
 @RequestMapping("ipl")
 @Controller
 public class IPLController {
+    /**
+     * Injecting player service.
+     */
     @Autowired
-PlayerService playerService;
-
+    private PlayerService playerService;
+    /**
+     * Injecting team service.
+     */
     @Autowired
-    TeamService teamService;
-
+    private TeamService teamService;
+    /**
+     * Injecting match service.
+     */
     @Autowired
-    MatchService matchService;
-
+    private MatchService matchService;
+    /**
+     * Injecting city service.
+     */
     @Autowired
-    CityService cityService;
-
+    private CityService cityService;
+    /**
+     * Injecting venue service.
+     */
     @Autowired
-    VenueService venueService;
-
+    private VenueService venueService;
+    /**
+     * Injecting country service.
+     */
     @Autowired
-    CountryService countryService;
-
+    private CountryService countryService;
+    /**
+     * Injecting point service.
+     */
     @Autowired
-    PointService pointService;
+    private PointService pointService;
 
 
+    /**
+     * @param model
+     * @return index
+     */
     @GetMapping("admin")
-    public String getAdminDashboard(Model model){
+    public String getAdminDashboard(final Model model) {
         Player player = playerService.getNewPlayerObject();
         List<Player> players = playerService.getAllPlayers();
-        model.addAttribute("players",players);
-        model.addAttribute("player",player);
+        model.addAttribute("players", players);
+        model.addAttribute("player", player);
 
         Team team = teamService.getNewTeamObject();
         List<Team> teams = teamService.getAllTeams();
-        model.addAttribute("teams",teams);
-        model.addAttribute("team",team);
+        model.addAttribute("teams", teams);
+        model.addAttribute("team", team);
 
         List<City> citiesList = cityService.getAllCities();
-        model.addAttribute("cities",citiesList);
+        model.addAttribute("cities", citiesList);
 
-        List<Venue> venues= venueService.getAllVenues();
-        model.addAttribute("venues",venues);
+        List<Venue> venues = venueService.getAllVenues();
+        model.addAttribute("venues", venues);
 
-        List<Country> countries= countryService.getAllCountries();
-        model.addAttribute("countries",countries);
+        List<Country> countries = countryService.getAllCountries();
+        model.addAttribute("countries", countries);
 
 //        Point table list
-        List<PointTable> pointTables= pointService.getAllTables();
+        List<PointTable> pointTables = pointService.getAllTables();
         Collections.sort(pointTables);
-        model.addAttribute("pointTables",pointTables);
+        model.addAttribute("pointTables", pointTables);
 
         Match match = new Match();
         match.setMatchWinner("NA");
@@ -67,26 +89,30 @@ PlayerService playerService;
         match.setResult("NA");
         List<Match> matches = matchService.getAllMatches();
         model.addAttribute("matches", matches);
-        model.addAttribute("match",match);
+        model.addAttribute("match", match);
 //        model.addAttribute("message",message);
         return "index";
     }
 
+    /**
+     * @param model
+     * @return dashboard.
+     */
     @GetMapping("/")
-    public String getDashboard(Model model){
+    public String getDashboard(final Model model) {
         List<Player> players = playerService.getAllPlayers();
-        model.addAttribute("players",players);
+        model.addAttribute("players", players);
 
         List<Team> teams = teamService.getAllTeams();
-        model.addAttribute("teams",teams);
+        model.addAttribute("teams", teams);
 
         List<Match> matches = matchService.getAllMatches();
         model.addAttribute("matches", matches);
 
         //        Point table list
-        List<PointTable> pointTables= pointService.getAllTables();
+        List<PointTable> pointTables = pointService.getAllTables();
         Collections.sort(pointTables);
-        model.addAttribute("pointTables",pointTables);
+        model.addAttribute("pointTables", pointTables);
         return "dashboard";
     }
 }
