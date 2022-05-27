@@ -10,14 +10,23 @@ import java.util.List;
 @Service
 public class CountryService {
 
+    /**
+     * Country Repository  .
+     */
     @Autowired
-    CountryRepository countryRepository;
+    private CountryRepository countryRepository;
 
-    public CountryService(CountryRepository countryRepository) {
-        this.countryRepository = countryRepository;
+    /**
+     * @param countryRepo
+     */
+    public CountryService(final CountryRepository countryRepo) {
+        this.countryRepository = countryRepo;
     }
 
-    public List<Country> getAllCountries(){
+    /**
+     * @return list of all Countries  .
+     */
+    public List<Country> getAllCountries() {
         return (List<Country>) countryRepository.findAll();
     }
 }
