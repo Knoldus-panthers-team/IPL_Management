@@ -26,6 +26,7 @@ public class InitDatabase {
     Country country ;
     @Autowired
     UserRepository userRepository;
+    
     @PostConstruct
     public void setCountry() {
         this.setUser();
