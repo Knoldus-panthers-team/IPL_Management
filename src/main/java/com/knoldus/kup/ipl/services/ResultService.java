@@ -7,7 +7,6 @@ import com.knoldus.kup.ipl.repository.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -17,36 +16,31 @@ public class ResultService {
     MatchRepository matchRepository;
     
     @Autowired
+    MatchService matchService;
+    
+    @Autowired
     TeamService teamService;
     
     @Autowired
     VenueService venueService;
     
-    @Autowired
-    MatchService matchService;
-    
-    @Autowired
-    private PointService pointService;
-    
 //    @Autowired
 //    private ProducerService kafkaService;
     
-    @Autowired
-    private UpdateResultService updateResultService;
-
     public void getResult(Match match)
     {
         int team1Runs = Integer.parseInt(match.getTeam1Score());
         int team2Runs = Integer.parseInt(match.getTeam2Score());
         int team1Wickets = Integer.parseInt(match.getTeam1Wickets());
         int team2Wickets = Integer.parseInt(match.getTeam2Wickets());
-
+        
         String result;
         String teamWinner;
         Team tossWinner = match.getTossWinnerTeam();
         String tossChoice = match.getTossChoice();
         Long firstInningsTeam = 1L;
 
+//        if (match.getTeam1Over()*36 < team1Runs )
         if(tossWinner.getId().equals(match.getTeam1().getId())){
             if(tossChoice.equals("batting")){
                 firstInningsTeam = match.getTeam1().getId();
@@ -60,7 +54,7 @@ public class ResultService {
                 firstInningsTeam = match.getTeam1().getId();
             }
         }
-
+        
         if(team1Runs>team2Runs){
             teamWinner = match.getTeam1().getName();
             if(firstInningsTeam.equals(match.getTeam1().getId())){         //won by runs
@@ -70,6 +64,7 @@ public class ResultService {
             }
         }
         else {
+            System.out.println("team2"+tossChoice);
             teamWinner = match.getTeam2().getName();
             if(firstInningsTeam.equals(match.getTeam2().getId())){       //won by runs
                 result = teamWinner+" won by "+(team2Runs-team1Runs)+" runs";
@@ -77,62 +72,55 @@ public class ResultService {
                 result=teamWinner+" won by "+(10-team2Wickets)+" wickets";
             }
         }
+        
         match.setMatchWinner(teamWinner);
         match.setResult(result);
         matchRepository.save(match);
     }
     
-    public Model getScoreForm(Model model, Long matchId){
-        Match match = matchRepository.findById(matchId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid match Id:" + matchId));
+    //    Created Now  .
     
-        if (match.getTeam1Over().equals("Yet to be played")) {
+    public Model addScores(long match_id, Model model) {
+        
+        Match match = matchService.getMatchById(match_id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid match Id:" + match_id));
+        System.out.println("result add method"+match.getTeam1().getName()+match.getTeam1Over().equals("Yet to be played"));
+        
+        if (match.getTeam1Over().equals("Yet to be played")){
             match.setTeam1Over("");
             match.setTeam2Over("");
         }
+        
+        
         model.addAttribute("match",match);
-    
+        
         List<Team> teams = teamService.getAllTeams();
         model.addAttribute("teams",teams);
-    
+        
         List<Venue> venues= venueService.getAllVenues();
         model.addAttribute("venues",venues);
+        
         return model;
+        
+        
     }
     
-    public Model getEditScoreForm(Long matchId, Model model){
-        Match match = matchService.getMatchById(matchId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid match Id:" + matchId));
+    public Model editScores(long match_id, Model model) {
+        
+        Match match = matchService.getMatchById(match_id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid match Id:" + match_id));
+        
         model.addAttribute("match",match);
+        
         List<Team> teams = teamService.getAllTeams();
         model.addAttribute("teams",teams);
+        
         List<Venue> venues= venueService.getAllVenues();
         model.addAttribute("venues",venues);
         model.addAttribute("team1", match.getTeam1().getName());
         model.addAttribute("team2", match.getTeam2().getName());
+        
         return model;
-    }
-    
-    public RedirectAttributes getAlertOnSave(Match match, RedirectAttributes redirectAttributes){
-        this.getResult(match);
-        pointService.addPointTable(match);
-//        kafkaService.sendMatch(match);
-        redirectAttributes.addFlashAttribute("message", "Score added successfully");
-        this.getSuccessMessage(redirectAttributes);
-        return redirectAttributes;
-    }
-    
-    public RedirectAttributes getAlertOnUpdate(RedirectAttributes redirectAttributes, Match match){
-        updateResultService.updatePointTable(match);
-//        kafkaServicez.sendMatch(match);
-        redirectAttributes.addFlashAttribute("message", "Score updated successfully");
-        this.getSuccessMessage(redirectAttributes);
-        return redirectAttributes;
-    }
-    
-    public RedirectAttributes getSuccessMessage(RedirectAttributes redirectAttributes){
-        redirectAttributes.addFlashAttribute("messageType", "score");
-        redirectAttributes.addFlashAttribute("alertType", "success");
-        return redirectAttributes;
+        
     }
 }

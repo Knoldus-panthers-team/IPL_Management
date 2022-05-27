@@ -54,21 +54,71 @@ public class MatchService {
     }
 
     public Match getNewMatch(){return new Match();}
-
+    
     public boolean isSlotBooked(Match match){
         Long selectedVenueId = match.getVenue().getId();
         String selectedDate = match.getMatchDate();
+        String selectedTeam1 = match.getTeam1().toString();
+        System.out.println(selectedTeam1);
+        String selectedTeam2 = match.getTeam2().toString();
+        System.out.println(selectedTeam2);
         String dateArr[] = selectedDate.split("\\s");
         List<Match> matches = (List<Match>) matchRepository.findAll();
         List<Match>  dbMatches = matches.stream().filter(matchVenue -> matchVenue.getVenue().getId()
                 .equals(selectedVenueId)).filter(match1 -> match1.getMatchDate()
                 .split("\\s")[0].equals(dateArr[0])).collect(Collectors.toList());
+        
+        List<Match>  dbMatches1 = matches.stream().filter(match2 -> match2.getTeam1().toString().
+                        equals(selectedTeam1) && match2.getTeam2().toString().equals(selectedTeam2))
+                .filter(match1 -> match1.getMatchDate()
+                        .split("\\s")[0].equals(dateArr[0])).collect(Collectors.toList());
+        
+        List<Match>  dbMatches2 = matches.stream().filter((match2 -> match2.getTeam1().toString().
+                        equals(selectedTeam2) && match2.getTeam2().toString().equals(selectedTeam1))).
+                filter(match1 -> match1.getMatchDate()
+                        .split("\\s")[0].equals(dateArr[0])).collect(Collectors.toList());
+        
+        List<Match>  dbMatches3 = matches.stream().filter((match2 -> match2.getTeam1().toString().
+                equals(selectedTeam1))).filter(match1 -> match1.getMatchDate()
+                .split("\\s")[0].equals(dateArr[0])).collect(Collectors.toList());
+        
+        List<Match>  dbMatches4 = matches.stream().filter((match2 -> match2.getTeam1().toString().
+                        equals(selectedTeam2) && match2.getTeam2().toString().equals(selectedTeam1))).
+                filter(match1 -> match1.getMatchDate()
+                        .split("\\s")[0].equals(dateArr[0])).collect(Collectors.toList());
+        
+        List<Match>  dbMatches5 = matches.stream().filter((match2 -> match2.getTeam2().toString().
+                        equals(selectedTeam1) && match2.getTeam2().toString().equals(selectedTeam1))).
+                filter(match1 -> match1.getMatchDate()
+                        .split("\\s")[0].equals(dateArr[0])).collect(Collectors.toList());
+        
+        List<Match>  dbMatches6 = matches.stream().filter((match2 -> match2.getTeam2().toString().
+                        equals(selectedTeam2) && match2.getTeam2().toString().equals(selectedTeam1))).
+                filter(match1 -> match1.getMatchDate()
+                        .split("\\s")[0].equals(dateArr[0])).collect(Collectors.toList());
+        
+        System.out.println(dbMatches1.size());
+        System.out.println(dbMatches1.toString());
+        
         if(dbMatches.size()>=1){
-            if(dbMatches.get(0).getId().equals(match.getId()))
-                return false;
+            System.out.println("TRUE");
             return true;
+        } else if (dbMatches1.size() >= 1) {
+            return true;
+        } else if(dbMatches2.size() >= 1) {
+            return true;
+        } else if (dbMatches3.size() >= 1) {
+            return true;
+        } else if(dbMatches4.size() >= 1) {
+            return true;
+        } else if (dbMatches5.size() >= 1) {
+            return true;
+        } else if(dbMatches6.size() >= 1) {
+            return true;
+        } else {
+            System.out.println("FALSE");
+            return false;
         }
-        return false;
     }
     public boolean isTeamSame(Match match){
         if (match.getTeam1() == match.getTeam2()) {
@@ -86,9 +136,14 @@ public class MatchService {
     }
     
     public RedirectAttributes getAlertOnSave(RedirectAttributes redirectAttributes, Match match){
-        matchRepository.save(match);
-        redirectAttributes.addFlashAttribute("message", "Match scheduled successfully");
-        this.getSuccessMessage(redirectAttributes);
+        if(isSlotBooked(match) == false) {
+            matchRepository.save(match);
+            redirectAttributes.addFlashAttribute("message", "Match scheduled successfully");
+            this.getSuccessMessage(redirectAttributes);
+        } else {
+            redirectAttributes.addFlashAttribute("message", "Match is already Scheduled");
+            this.getErrorMessage(redirectAttributes);
+        }
         return redirectAttributes;
     }
     

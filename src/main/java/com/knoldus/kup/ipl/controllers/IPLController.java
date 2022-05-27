@@ -13,8 +13,6 @@ import java.util.List;
 @RequestMapping("ipl")
 @Controller
 public class IPLController {
-
-//    ---------------------- Player Part---------------------------------
     @Autowired
 PlayerService playerService;
 

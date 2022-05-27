@@ -186,90 +186,90 @@ class ResultServiceTest {
         assertThat(pointService.getById(1L)).isEqualTo(pointTable1);
     }
     
-    @Test
-    void getScoreForm_ReturnScoreFormModel(){
-        Model model = new ExtendedModelMap();
-        Mockito.when(matchRepository.findById(match1.getId())).thenReturn(Optional.ofNullable(match1));
-        Mockito.when(teamRepository.findAll()).thenReturn(teamList);
-        Mockito.when(venueRepository.findAll()).thenReturn(venueList);
-        model = resultService.getScoreForm(model,match1.getId());
-        List<Team> expected = (List<Team>) model.getAttribute("teams");
-        assertTrue(expected.size()>1);
-    }
-    
-    @Test
-    void getScoreForm_ReturnScoreFormModelOnEmpty(){
-        Model model = new ExtendedModelMap();
-        Mockito.when(matchRepository.findById(match1.getId())).thenReturn(Optional.ofNullable(match1));
-        Mockito.when(teamRepository.findAll()).thenReturn(teamList);
-        Mockito.when(venueRepository.findAll()).thenReturn(venueList);
-        match1.setTeam1Over("Yet to be played");
-        match1.setTeam2Over("Yet to be played");
-        model = resultService.getScoreForm(model,match1.getId());
-        List<Team> expected = (List<Team>) model.getAttribute("teams");
-        assertTrue(expected.size()>1);
-    }
-    
-    @Test
-    void getEditScoreForm_ReturnEditFormModel(){
-        Model model = new ExtendedModelMap();
-        Mockito.when(matchRepository.findById(match1.getId())).thenReturn(Optional.ofNullable(match1));
-        Mockito.when(teamRepository.findAll()).thenReturn(teamList);
-        Mockito.when(venueRepository.findAll()).thenReturn(venueList);
-        model = resultService.getEditScoreForm(match1.getId(),model);
-        List<Team> expected = (List<Team>) model.getAttribute("venues");
-        assertTrue(expected.size()>1);
-    }
-    
-    @Test
-    void getAlertOnSave_ReturnSuccessAlertAttributes(){
-        RedirectAttributes attributes = new RedirectAttributesModelMap();
-        attributes = resultService.getAlertOnSave(match1,attributes);
-        String actualAttributes = String.valueOf(attributes.getFlashAttributes());
-        String expectedAttributes = "{message=Score added successfully, messageType=score, alertType=success}";
-        assertEquals(expectedAttributes,actualAttributes);
-    }
-    
-    @Test
-    void getAlertOnUpdate_ReturnSuccessAlertAttributes(){
-        RedirectAttributes attributes = new RedirectAttributesModelMap();
-        pointTable1 = new PointTable(1L,4,team1,3,1,6,0.417);
-        pointTable2 = new PointTable(2L,4,team1,3,1,6,0.417);
-        Mockito.when(pointRepository.findByTeamId(1L)).thenReturn(pointTable1);
-        Mockito.when(pointRepository.findByTeamId(2L)).thenReturn(pointTable2);
-        attributes = resultService.getAlertOnUpdate(attributes,match1);
-        String actualAttributes = String.valueOf(attributes.getFlashAttributes());
-        String expectedAttributes = "{message=Score updated successfully, messageType=score, alertType=success}";
-        assertEquals(expectedAttributes,actualAttributes);
-    }
-    
-    @Test
-    void getAlertOnUpdate_ReturnSuccessAlertAttributesIfTeam1WinsByRuns(){
-        RedirectAttributes attributes = new RedirectAttributesModelMap();
-        pointTable1 = new PointTable(1L,4,team1,3,1,6,0.417);
-        pointTable2 = new PointTable(2L,4,team1,3,1,6,0.417);
-        Mockito.when(pointRepository.findByTeamId(1L)).thenReturn(pointTable1);
-        Mockito.when(pointRepository.findByTeamId(2L)).thenReturn(pointTable2);
-        match1.setTeam1Score("177");
-        attributes = resultService.getAlertOnUpdate(attributes,match1);
-        String actualAttributes = String.valueOf(attributes.getFlashAttributes());
-        String expectedAttributes = "{message=Score updated successfully, messageType=score, alertType=success}";
-        assertEquals(expectedAttributes,actualAttributes);
-    }
-    
-    @Test
-    void getAlertOnUpdate_ReturnSuccessAlertAttributesIfTeam1WinsByWickets(){
-        RedirectAttributes attributes = new RedirectAttributesModelMap();
-        pointTable1 = new PointTable(1L,4,team1,3,1,6,0.417);
-        pointTable2 = new PointTable(2L,4,team1,3,1,6,0.417);
-        Mockito.when(pointRepository.findByTeamId(1L)).thenReturn(pointTable1);
-        Mockito.when(pointRepository.findByTeamId(2L)).thenReturn(pointTable2);
-        match1.setTossChoice("bowling");
-        match1.setTeam1Score("177");
-        attributes = resultService.getAlertOnUpdate(attributes,match1);
-        String actualAttributes = String.valueOf(attributes.getFlashAttributes());
-        String expectedAttributes = "{message=Score updated successfully, messageType=score, alertType=success}";
-        assertEquals(expectedAttributes,actualAttributes);
-    }
-    
+//    @Test
+//    void getScoreForm_ReturnScoreFormModel(){
+//        Model model = new ExtendedModelMap();
+//        Mockito.when(matchRepository.findById(match1.getId())).thenReturn(Optional.ofNullable(match1));
+//        Mockito.when(teamRepository.findAll()).thenReturn(teamList);
+//        Mockito.when(venueRepository.findAll()).thenReturn(venueList);
+////        model = resultService.getScoreForm(model,match1.getId());
+//        List<Team> expected = (List<Team>) model.getAttribute("teams");
+//        assertTrue(expected.size()>1);
+//    }
+//
+//    @Test
+//    void getScoreForm_ReturnScoreFormModelOnEmpty(){
+//        Model model = new ExtendedModelMap();
+//        Mockito.when(matchRepository.findById(match1.getId())).thenReturn(Optional.ofNullable(match1));
+//        Mockito.when(teamRepository.findAll()).thenReturn(teamList);
+//        Mockito.when(venueRepository.findAll()).thenReturn(venueList);
+//        match1.setTeam1Over("Yet to be played");
+//        match1.setTeam2Over("Yet to be played");
+////        model = resultService.getScoreForm(model,match1.getId());
+//        List<Team> expected = (List<Team>) model.getAttribute("teams");
+//        assertTrue(expected.size()>1);
+//    }
+//
+//    @Test
+//    void getEditScoreForm_ReturnEditFormModel(){
+//        Model model = new ExtendedModelMap();
+//        Mockito.when(matchRepository.findById(match1.getId())).thenReturn(Optional.ofNullable(match1));
+//        Mockito.when(teamRepository.findAll()).thenReturn(teamList);
+//        Mockito.when(venueRepository.findAll()).thenReturn(venueList);
+////        model = resultService.getEditScoreForm(match1.getId(),model);
+//        List<Team> expected = (List<Team>) model.getAttribute("venues");
+//        assertTrue(expected.size()>1);
+//    }
+
+//    @Test
+//    void getAlertOnSave_ReturnSuccessAlertAttributes(){
+//        RedirectAttributes attributes = new RedirectAttributesModelMap();
+////        attributes = resultService.getAlertOnSave(match1,attributes);
+//        String actualAttributes = String.valueOf(attributes.getFlashAttributes());
+//        String expectedAttributes = "{message=Score added successfully, messageType=score, alertType=success}";
+//        assertEquals(expectedAttributes,actualAttributes);
+//    }
+//
+//    @Test
+//    void getAlertOnUpdate_ReturnSuccessAlertAttributes(){
+//        RedirectAttributes attributes = new RedirectAttributesModelMap();
+//        pointTable1 = new PointTable(1L,4,team1,3,1,6,0.417);
+//        pointTable2 = new PointTable(2L,4,team1,3,1,6,0.417);
+//        Mockito.when(pointRepository.findByTeamId(1L)).thenReturn(pointTable1);
+//        Mockito.when(pointRepository.findByTeamId(2L)).thenReturn(pointTable2);
+////        attributes = resultService.getAlertOnUpdate(attributes,match1);
+//        String actualAttributes = String.valueOf(attributes.getFlashAttributes());
+//        String expectedAttributes = "{message=Score updated successfully, messageType=score, alertType=success}";
+//        assertEquals(expectedAttributes,actualAttributes);
+//    }
+//
+//    @Test
+//    void getAlertOnUpdate_ReturnSuccessAlertAttributesIfTeam1WinsByRuns(){
+//        RedirectAttributes attributes = new RedirectAttributesModelMap();
+//        pointTable1 = new PointTable(1L,4,team1,3,1,6,0.417);
+//        pointTable2 = new PointTable(2L,4,team1,3,1,6,0.417);
+//        Mockito.when(pointRepository.findByTeamId(1L)).thenReturn(pointTable1);
+//        Mockito.when(pointRepository.findByTeamId(2L)).thenReturn(pointTable2);
+//        match1.setTeam1Score("177");
+////        attributes = resultService.getAlertOnUpdate(attributes,match1);
+//        String actualAttributes = String.valueOf(attributes.getFlashAttributes());
+//        String expectedAttributes = "{message=Score updated successfully, messageType=score, alertType=success}";
+//        assertEquals(expectedAttributes,actualAttributes);
+//    }
+//
+//    @Test
+//    void getAlertOnUpdate_ReturnSuccessAlertAttributesIfTeam1WinsByWickets(){
+//        RedirectAttributes attributes = new RedirectAttributesModelMap();
+//        pointTable1 = new PointTable(1L,4,team1,3,1,6,0.417);
+//        pointTable2 = new PointTable(2L,4,team1,3,1,6,0.417);
+//        Mockito.when(pointRepository.findByTeamId(1L)).thenReturn(pointTable1);
+//        Mockito.when(pointRepository.findByTeamId(2L)).thenReturn(pointTable2);
+//        match1.setTossChoice("bowling");
+//        match1.setTeam1Score("177");
+////        attributes = resultService.getAlertOnUpdate(attributes,match1);
+//        String actualAttributes = String.valueOf(attributes.getFlashAttributes());
+//        String expectedAttributes = "{message=Score updated successfully, messageType=score, alertType=success}";
+//        assertEquals(expectedAttributes,actualAttributes);
+//    }
+
 }
