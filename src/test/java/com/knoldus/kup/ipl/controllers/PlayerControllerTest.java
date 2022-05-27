@@ -1,81 +1,92 @@
-//package com.knoldus.kup.ipl.controllers;
-//
-//import com.knoldus.kup.ipl.models.City;
-//import com.knoldus.kup.ipl.models.Country;
-//import com.knoldus.kup.ipl.models.Player;
-//import com.knoldus.kup.ipl.models.Team;
-//import com.knoldus.kup.ipl.services.PlayerService;
-//import org.junit.Before;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.junit.runner.RunWith;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-//import org.springframework.boot.test.mock.mockito.MockBean;
-//import org.springframework.test.context.junit4.SpringRunner;
-//import org.springframework.test.web.servlet.MockMvc;
-//
-//import java.util.Set;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//
-//@RunWith(SpringRunner.class)
-//@WebMvcTest
-//class PlayerControllerTest {
-//
-//    @Autowired
-//    private MockMvc mvc;
-//
-//    @MockBean
-//    private PlayerService playerService;
-//
-//    private Player player1,player2,player3;
-//
-//    private Set<Player> playerSet;
-//
-//    @BeforeEach
-//    void setUp() {
-//        City city1 = new City();
-//        City city2 = new City();
-//        city1.setId(1L);
-//        city1.setCityName("Kolkata");
-//        city2.setId(2L);
-//        city2.setCityName("Chennai");
-//
-//        Team team1, team2;
-//        Country country;
-//        team1 = new Team(1L,"KKR", city1);
-////        team2 = new Team(2L,"CSK", city2);
-//        country = new Country(1L,"India");
-//        player1 = new Player(1L,"Rohit Sharma",team1,country,"Batsman");
-//        player2 = new Player(2L,"Virat Kohli",team1,country,"Batsman");
-//        player3 = new Player(3L,"Virat Kohli",team1,country,"Batsman");
-//    }
-//
-//    @Test
-//    void addForm() {
-//    }
-//
-//    @Test
-//    void addPlayer() {
-//    }
-//
-////    @Test
-////    void showUpdateForm() {
-////        given(studentService.findByStudentNumber(ragcrixStudentNumber)).willReturn(ragcrix);
-////
-////        mvc.perform(get("/students/byStudentNumber/{studentNumber}", ragcrixStudentNumber)
-////                        .contentType(MediaType.APPLICATION_JSON))
-////                .andExpect(status().isOk())
-////                .andExpect(jsonPath("$.name", is(ragcrix.getName())));
-////    }
-////    }
-//
-//    @Test
-//    void updatePlayer() {
-//    }
-//
-//    @Test
-//    void deletePlayer() {
-//    }
-//}
+package com.knoldus.kup.ipl.controllers;
+
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
+
+import com.knoldus.kup.ipl.services.CountryService;
+import com.knoldus.kup.ipl.services.PlayerService;
+import com.knoldus.kup.ipl.services.TeamService;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.ui.ConcurrentModel;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
+
+@ContextConfiguration(classes = {PlayerController.class})
+@ExtendWith(SpringExtension.class)
+class PlayerControllerTest {
+    @MockBean
+    private CountryService countryService;
+    
+    @Autowired
+    private PlayerController playerController;
+    
+    @MockBean
+    private PlayerService playerService;
+    
+    @MockBean
+    private TeamService teamService;
+    
+    @Test
+    void testAddPlayer() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/players/add");
+        MockMvcBuilders.standaloneSetup(this.playerController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().size(1))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("player"))
+                .andExpect(MockMvcResultMatchers.view().name("addPlayer"))
+                .andExpect(MockMvcResultMatchers.forwardedUrl("addPlayer"));
+    }
+    
+    @Test
+    void testDeletePlayer() throws Exception {
+        when(this.playerService.getAlertOnDelete((Long) any(),
+                (org.springframework.web.servlet.mvc.support.RedirectAttributes) any()))
+                .thenReturn(new RedirectAttributesModelMap());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/players/delete/{id}", 123L);
+        MockMvcBuilders.standaloneSetup(this.playerController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.model().size(0))
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/ipl/admin"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/ipl/admin"));
+    }
+    
+    @Test
+    void testShowUpdateForm() throws Exception {
+        when(this.playerService.getPlayerWithModel((Long) any(), (org.springframework.ui.Model) any()))
+                .thenReturn(new ConcurrentModel());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/players/edit/{id}", 123L);
+        MockMvcBuilders.standaloneSetup(this.playerController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().size(0))
+                .andExpect(MockMvcResultMatchers.view().name("update-player"))
+                .andExpect(MockMvcResultMatchers.forwardedUrl("update-player"));
+    }
+    
+    @Test
+    void testUpdatePlayer() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/players/update/{id}", 1L);
+        MockMvcBuilders.standaloneSetup(this.playerController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().size(1))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("player"))
+                .andExpect(MockMvcResultMatchers.view().name("update-player"))
+                .andExpect(MockMvcResultMatchers.forwardedUrl("update-player"));
+    }
+}
+

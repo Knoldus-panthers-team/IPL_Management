@@ -13,8 +13,6 @@ import java.util.List;
 @RequestMapping("ipl")
 @Controller
 public class IPLController {
-
-//    ---------------------- Player Part---------------------------------
     @Autowired
 PlayerService playerService;
 
@@ -74,7 +72,7 @@ PlayerService playerService;
         return "index";
     }
 
-    @GetMapping("")
+    @GetMapping("/")
     public String getDashboard(Model model){
         List<Player> players = playerService.getAllPlayers();
         model.addAttribute("players",players);

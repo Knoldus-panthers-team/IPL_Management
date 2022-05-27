@@ -1,27 +1,19 @@
 package com.knoldus.kup.ipl.models;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import org.springframework.data.annotation.Id;
+import org.springframework.stereotype.Component;
+import javax.persistence.Transient;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Entity
-@Table(name = "matches")
-public class Match {
+@Component
+public class MatchResult {
     @Id
-    @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-
     private Long id;
-
-    @NotNull(message = "This filed is required")
     private String matchDate;
-
     private String team1Wickets;
     private String team2Wickets;
-
-    //    private String tossDecision;
     private String matchWinner;
     private String result;
     private String team1Score;
@@ -32,36 +24,25 @@ public class Match {
 
     @Transient
     private String team2FinalScore;
-
-    private String tossChoice;
-
-    @ManyToOne
-    @JoinColumn(name = "tossWinner_id")
-    private Team tossWinnerTeam;
-
+    
+    private String tossWinnerTeam;
     private String team1Over;
     private String team2Over;
+    private String venue;
 
-    @ManyToOne
-    @JoinColumn(name = "venue_id")
-    private Venue venue;
+    private String team1;
 
-    @ManyToOne
-    @JoinColumn(name = "team_id1")
-    private Team team1;
+    private String team2;
 
-    @ManyToOne
-    @JoinColumn(name = "team_id2")
-    private Team team2;
-
-    public Match(Long id, String matchDate, Venue venue, Team team1, Team team2) {
+    public MatchResult(Long id, String matchDate, String venue, String team1, String team2) {
         this.id = id;
         this.matchDate = matchDate;
         this.venue = venue;
         this.team1 = team1;
         this.team2 = team2;
     }
-    public Match(){}
+
+    public MatchResult(){}
 
     public Long getId() {
         return id;
@@ -164,44 +145,36 @@ public class Match {
         this.team2Over = team2Over;
     }
 
-    public Venue getVenue() {
+    public String getVenue() {
         return venue;
     }
 
-    public void setVenue(Venue venue) {
+    public void setVenue(String venue) {
         this.venue = venue;
     }
 
-    public Team getTeam1() {
+    public String getTeam1() {
         return team1;
     }
 
-    public void setTeam1(Team team1) {
+    public void setTeam1(String team1) {
         this.team1 = team1;
     }
 
-    public Team getTeam2() {
+    public String getTeam2() {
         return team2;
     }
 
-    public void setTeam2(Team team2) {
+    public void setTeam2(String team2) {
         this.team2 = team2;
     }
 
-    public Team getTossWinnerTeam() {
+    public String getTossWinnerTeam() {
         return tossWinnerTeam;
     }
 
-    public void setTossWinnerTeam(Team tossWinnerTeam) {
+    public void setTossWinnerTeam(String tossWinnerTeam) {
         this.tossWinnerTeam = tossWinnerTeam;
-    }
-
-    public String getTossChoice() {
-        return tossChoice;
-    }
-
-    public void setTossChoice(String tossChoice) {
-        this.tossChoice = tossChoice;
     }
 
     public String getTeam1FinalScore() {
@@ -218,6 +191,6 @@ public class Match {
         if(score != null){
             return this.team2FinalScore = score+"/"+wickets;
         }
-        return this.team2FinalScore= " ";
+        return this.team2FinalScore = " ";
     }
 }

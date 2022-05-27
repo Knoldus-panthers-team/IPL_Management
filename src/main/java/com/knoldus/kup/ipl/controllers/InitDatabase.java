@@ -6,6 +6,8 @@ import com.knoldus.kup.ipl.models.Venue;
 import com.knoldus.kup.ipl.repository.CityRepository;
 import com.knoldus.kup.ipl.repository.CountryRepository;
 import com.knoldus.kup.ipl.repository.VenueRepository;
+import com.knoldus.kup.ipl.securityconfig.User;
+import com.knoldus.kup.ipl.securityconfig.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +24,12 @@ public class InitDatabase {
     @Autowired
     VenueRepository venueRepository;
     Country country ;
+    @Autowired
+    UserRepository userRepository;
+    
     @PostConstruct
     public void setCountry() {
+        this.setUser();
         country = new Country(1L,"India");
         countryRepository.save(country);
         this.setCities();
@@ -40,7 +46,7 @@ public class InitDatabase {
                 new City(7L,"Pune", country),
                 new City(8L,"Abu Dhabi", country),
                 new City(9L,"Punjab", country),
-                new City(10L,"Heydrabad", country)
+                new City(10L,"Hyderabad", country)
         );
         cityRepository.saveAll(cityIterable);
         return (List<City>) cityIterable;
@@ -50,14 +56,19 @@ public class InitDatabase {
         List<City> cities = this.setCities();
         Iterable<Venue> iterable = Arrays.asList(
                 new Venue(1L,"M Chinnaswamy Stadium", cities.get(0)),
-                new Venue(2L,"Punjab Cricket Association Stadium", cities.get(1)),
+                new Venue(2L,"Punjab Cricket Association Stadium", cities.get(8)),
                 new Venue(3L,"Feroz Shah Kotla", cities.get(2)),
-                new Venue(4L,"Punjab Cricket Association Stadium", cities.get(3)),
-                new Venue(5L,"M Chinnaswamy Stadium", cities.get(4)),
-                new Venue(6L,"Eden Gardens", cities.get(5)),
-                new Venue(7L,"Rajiv Gandhi International Stadium", cities.get(6)),
-                new Venue(8L,"Sheikh Zayed Stadium", cities.get(7))
+                new Venue(4L,"M Chinnaswamy Stadium", cities.get(4)),
+                new Venue(5L,"Eden Gardens", cities.get(4)),
+                new Venue(6L,"Rajiv Gandhi International Stadium", cities.get(9)),
+                new Venue(7L,"Sheikh Zayed Stadium", cities.get(7))
         );
         venueRepository.saveAll(iterable);
+    }
+    public void setUser() {
+        User user = new User(1L, "admin",
+                "$2a$10$IRA.GYhEEZAhjy5A.oh.5OKmRMDcyLXQDzQk7nXsqmWDDQdDHtzEC",
+                "ADMIN");
+        userRepository.save(user);
     }
 }

@@ -18,84 +18,48 @@ import java.util.List;
 @Controller
 @RequestMapping("result")
 public class ResultController {
-
-    @Autowired
-    MatchService matchService;
-
-    @Autowired
-    VenueService venueService;
-
-    @Autowired
-    TeamService teamService;
-
+    
     @Autowired
     ResultService resultService;
-
+    
+//    @Autowired
+//    private ProducerService kafkaService;
+    
     @Autowired
     UpdateResultService updateResultService;
-
+    
     @Autowired
     PointService pointService;
-
+    
+    
     @GetMapping("/addScore/{match_id}")
     public String showAddForm(@PathVariable ("match_id") long match_id, Model model) {
-
-        Match match = matchService.getMatchById(match_id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid match Id:" + match_id));
-        System.out.println("result add method"+match.getTeam1().getName()+match.getTeam1Over().equals("Yet to be played"));
-
-        if (match.getTeam1Over().equals("Yet to be played")){
-            match.setTeam1Over("");
-            match.setTeam2Over("");
-        }
-
-        model.addAttribute("match",match);
-
-        List<Team> teams = teamService.getAllTeams();
-        model.addAttribute("teams",teams);
-
-        List<Venue> venues= venueService.getAllVenues();
-        model.addAttribute("venues",venues);
-
+        resultService.addScores(match_id, model);
         return "add-result";
     }
-
+    
     @GetMapping("/editScore/{match_id}")
     public String showUpdateForm(@PathVariable ("match_id") long match_id, Model model) {
-
-        Match match = matchService.getMatchById(match_id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid match Id:" + match_id));
-
-        model.addAttribute("match",match);
-
-        List<Team> teams = teamService.getAllTeams();
-        model.addAttribute("teams",teams);
-
-        List<Venue> venues= venueService.getAllVenues();
-        model.addAttribute("venues",venues);
-        model.addAttribute("team1", match.getTeam1().getName());
-        model.addAttribute("team2", match.getTeam2().getName());
-
+        resultService.editScores(match_id, model);
         return "update-result";
     }
-
+    
     @PostMapping("/add/{id}")
     public String ScoreSave(@PathVariable("id") long id, Match match, Model model, RedirectAttributes redirectAttributes){
         resultService.getResult(match);
         pointService.addPointTable(match);
+//        kafkaService.sendMatch(match);
         redirectAttributes.addFlashAttribute("message", "Score added successfully");
         redirectAttributes.addFlashAttribute("messageType", "score");
         redirectAttributes.addFlashAttribute("alertType", "success");
         return "redirect:/ipl/admin";
     }
-
+    
     @PostMapping("/update/{id}")
     public String ScoreUpdate(@PathVariable("id") long id, Match match, Model model, RedirectAttributes redirectAttributes){
-        updateResultService.updatePointTable(match);
-        redirectAttributes.addFlashAttribute("message", "Score updated successfully");
-        redirectAttributes.addFlashAttribute("messageType", "score");
-        redirectAttributes.addFlashAttribute("alertType", "success");
+//        kafkaService.sendMatch(match);
+        updateResultService.updatePointTable(match, redirectAttributes);
         return "redirect:/ipl/admin";
     }
-
+    
 }
