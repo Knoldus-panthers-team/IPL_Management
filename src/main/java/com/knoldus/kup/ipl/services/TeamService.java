@@ -6,60 +6,102 @@ import com.knoldus.kup.ipl.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class TeamService {
 
+    /**
+     * Team Repository  .
+     */
     @Autowired
-    TeamRepository teamRepository;
-    
-    @Autowired
-    CityService cityService;
+    private TeamRepository teamRepository;
 
-    public TeamService(TeamRepository teamRepository) {
-        this.teamRepository = teamRepository;
+    /**
+     * City Service  .
+     */
+    @Autowired
+    private CityService cityService;
+
+    /**
+     * @param teamRepo
+     */
+    public TeamService(final TeamRepository teamRepo) {
+        this.teamRepository = teamRepo;
     }
 
-    public Team saveTeam(Team team){
+    /**
+     * @param team
+     * @return Team on saving it to database  .
+     */
+    public Team saveTeam(final Team team) {
         return teamRepository.save(team);
     }
 
-    public Team getNewTeamObject(){
+    /**
+     * @return new Team Object  .
+     */
+    public Team getNewTeamObject() {
         return new Team();
     }
 
-    public Optional<Team> getTeamById(Long id){
+    /**
+     * @param id
+     * @return Team  .
+     */
+    public Optional<Team> getTeamById(final Long id) {
         return teamRepository.findById(id);
     }
 
-    public Optional<Team> getByName(String name){
+    /**
+     * @param name
+     * @return Team by its name  .
+     */
+    public Optional<Team> getByName(final String name) {
         return this.teamRepository.findByName(name);
     }
 
-    public List<Team> getAllTeams(){
+    /**
+     * @return all Teams  .
+     */
+    public List<Team> getAllTeams() {
         return (List<Team>) teamRepository.findAll();
     }
 
-    public void deleteTeam(Long id){
+    /**
+     * @param id
+     */
+    public void deleteTeam(final Long id) {
         teamRepository.deleteById(id);
     }
-    
-    public RedirectAttributes getAlertOnSave(Team team, RedirectAttributes redirectAttributes){
-        List<Team> list= this.getAllTeams();
-        if(list.size()<15) {
+
+    /**
+     * @param team
+     * @param redirectAttributes
+     * @return generates alert on save  .
+     */
+    public RedirectAttributes getAlertOnSave(
+            final Team team,
+            final RedirectAttributes redirectAttributes) {
+        List<Team> list = this.getAllTeams();
+        if (list.size() < 15) {
             this.saveTeam(team);
-            redirectAttributes.addFlashAttribute("message", "Team added successfully");
+            redirectAttributes.addFlashAttribute(
+                    "message",
+                    "Team added successfully");
             this.getSuccessMessage(redirectAttributes);
-        }
-        else {
-            redirectAttributes.addFlashAttribute("message", "Team can not be more than 15");
-            redirectAttributes.addFlashAttribute("messageType", "team");
-            redirectAttributes.addFlashAttribute("alertType", "error");
+        } else {
+            redirectAttributes.addFlashAttribute(
+                    "message",
+                    "Team can not be more than 15");
+            redirectAttributes.addFlashAttribute(
+                    "messageType",
+                    "team");
+            redirectAttributes.addFlashAttribute(
+                    "alertType",
+                    "error");
         }
 //        if (result.hasErrors()) {
 //            redirectAttributes.addAttribute("message", "Failed");
@@ -68,9 +110,16 @@ public class TeamService {
 //        }
         return redirectAttributes;
     }
-    
-    public Model getTeamEditForm(Model model, Long teamId){
-        if(this.getTeamById(teamId).isPresent()) {
+
+    /**
+     * @param model
+     * @param teamId
+     * @return Team form to edit  .
+     */
+    public Model getTeamEditForm(
+            final Model model,
+            final Long teamId) {
+        if (this.getTeamById(teamId).isPresent()) {
             System.out.println("..................sfff");
             Team team = this.getTeamById(teamId).orElse(null);
             List<City> cities = cityService.getAllCities();
@@ -79,32 +128,69 @@ public class TeamService {
         }
         return model;
     }
-    
-    public RedirectAttributes getAlertOnUpdate(Team team, RedirectAttributes redirectAttributes){
+
+    /**
+     * @param team
+     * @param redirectAttributes
+     * @return generate alert on updating the Team  .
+     */
+    public RedirectAttributes getAlertOnUpdate(
+            final Team team,
+            final RedirectAttributes redirectAttributes) {
         teamRepository.save(team);
-        redirectAttributes.addFlashAttribute("message", "Team updated successfully");
+        redirectAttributes.addFlashAttribute(
+                "message",
+                "Team updated successfully");
         this.getSuccessMessage(redirectAttributes);
         return redirectAttributes;
     }
-    
-    public RedirectAttributes getSuccessMessage(RedirectAttributes redirectAttributes){
-        redirectAttributes.addFlashAttribute("messageType", "team");
-        redirectAttributes.addFlashAttribute("alertType", "success");
+
+    /**
+     * @param redirectAttributes
+     * @return generate success message on saving the Team  .
+     */
+    public RedirectAttributes getSuccessMessage(
+            final RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute(
+                "messageType",
+                "team");
+        redirectAttributes.addFlashAttribute(
+                "alertType",
+                "success");
         return redirectAttributes;
     }
-    
-    public RedirectAttributes getAlertOnDelete(Long id,RedirectAttributes redirectAttributes){
+
+    /**
+     * @param id
+     * @param redirectAttributes
+     * @return generate alert on delete  .
+     */
+    public RedirectAttributes getAlertOnDelete(
+            final Long id,
+            final RedirectAttributes redirectAttributes) {
         teamRepository.deleteById(id);
-        redirectAttributes.addFlashAttribute("message", "Team deleted successfully");
+        redirectAttributes.addFlashAttribute(
+                "message",
+                "Team deleted successfully");
         this.getSuccessMessage(redirectAttributes);
         return redirectAttributes;
     }
-    
-    public RedirectAttributes getAlertOnNotFound(RedirectAttributes redirectAttributes){
-        redirectAttributes.addFlashAttribute("message", "Team not found");
-        redirectAttributes.addFlashAttribute("messageType", "team");
-        redirectAttributes.addFlashAttribute("alertType", "error");
+
+    /**
+     * @param redirectAttributes
+     * @return generates alert on not finding the team on database  .
+     */
+    public RedirectAttributes getAlertOnNotFound(
+            final RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute(
+                "message",
+                "Team not found");
+        redirectAttributes.addFlashAttribute(
+                "messageType",
+                "team");
+        redirectAttributes.addFlashAttribute(
+                "alertType",
+                "error");
         return redirectAttributes;
     }
-    
 }

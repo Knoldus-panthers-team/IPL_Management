@@ -10,14 +10,23 @@ import java.util.List;
 @Service
 public class CityService {
 
+    /**
+     * City Repository  .
+     */
     @Autowired
     CityRepository cityRepository;
 
-    public CityService(CityRepository cityRepository) {
-        this.cityRepository = cityRepository;
+    /**
+     * @param cityRepo
+     */
+    public CityService(final CityRepository cityRepo) {
+        this.cityRepository = cityRepo;
     }
 
-    public List<City> getAllCities(){
+    /**
+     * @return list of all Cities  .
+     */
+    public List<City> getAllCities() {
         return (List<City>) cityRepository.findAll();
     }
 }

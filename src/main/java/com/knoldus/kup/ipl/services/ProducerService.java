@@ -9,39 +9,58 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class ProducerService {
 
+    /**
+     * Match Result  .
+     */
     @Autowired
-    MatchResult result;
+    private MatchResult matchResult;
 
-    private static final Logger logger = LoggerFactory.getLogger(PlayerService.class);
+    /**
+     * Logger  .
+     */
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(PlayerService.class);
+    /**
+     * Topic name for Kafka  .
+     */
     private static final String TOPIC = "iplResult";
 
+    /**
+     * Kafka Template  .
+     */
     @Autowired
-    KafkaTemplate<String, String> kafkaTemplate;
+    private KafkaTemplate<String, String> kafkaTemplate;
 
-    public String sendDataToKafka(String result) {
-        logger.info(String.format("#### -> Producing message -> %s", result));
+    /**
+     * @param result
+     * @return Topic  .
+     */
+    public String sendDataToKafka(final String result) {
+        LOGGER.info(String.format("#### -> Producing message -> %s", result));
         kafkaTemplate.send(TOPIC, result);
         return TOPIC;
     }
 
-    public void sendMatch(Match match){
-        result.setId(match.getId());
-        result.setResult(match.getResult());
-        result.setTeam1Score(match.getTeam1Score());
-        result.setTeam2Score(match.getTeam2Score());
-        result.setTeam1Wickets(match.getTeam1Wickets());
-        result.setTeam2Wickets(match.getTeam2Wickets());
-        result.setTeam1(match.getTeam1().getName());
-        result.setTeam2(match.getTeam2().getName());
-        result.setTeam1Over(match.getTeam1Over());
-        result.setTeam2Over(match.getTeam2Over());
-        result.setVenue(match.getVenue().getName());
-        result.setMatchDate(match.getMatchDate().toString());
-        String gson = new Gson().toJson(result);
+    /**
+     * @param match
+     */
+    public void sendMatch(final Match match) {
+        matchResult.setId(match.getId());
+        matchResult.setResult(match.getResult());
+        matchResult.setTeam1Score(match.getTeam1Score());
+        matchResult.setTeam2Score(match.getTeam2Score());
+        matchResult.setTeam1Wickets(match.getTeam1Wickets());
+        matchResult.setTeam2Wickets(match.getTeam2Wickets());
+        matchResult.setTeam1(match.getTeam1().getName());
+        matchResult.setTeam2(match.getTeam2().getName());
+        matchResult.setTeam1Over(match.getTeam1Over());
+        matchResult.setTeam2Over(match.getTeam2Over());
+        matchResult.setVenue(match.getVenue().getName());
+        matchResult.setMatchDate(match.getMatchDate().toString());
+        String gson = new Gson().toJson(matchResult);
         this.sendDataToKafka(gson);
     }
 }
